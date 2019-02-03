@@ -1,0 +1,240 @@
+<systems>
+    <system name="amiga" defaultEmulator="fs-uae" displayName="Commodore Amiga">
+        <emulator name="fs-uae" displayName="FS-UAE" path=".\Emulators\fs-uae\fs-uae.exe %ROM%">
+            <extensionOverrides>
+                <extension>fs-uae</extension>
+            </extensionOverrides>
+        </emulator>
+        <emulator name="fs-uae-adf" displayName="FS-UAE" path=".\Emulators\fs-uae\fs-uae.exe --floppy_drive_0=%ROM%">
+            <extensionOverrides>
+                <extension>adf</extension>
+            </extensionOverrides>
+        </emulator>
+        <emulator name="fs-uae-whdload" displayName="FS-UAE" path=".\EmulatorLaunchers\fs-uae\fs-uae.ps1 -romPath %ROM%">
+            <extensionOverrides>
+                <extension>lha</extension>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="atari800" defaultEmulator="genesis_plus_gx_libretro" displayName="Atari 800">
+        <emulator name="genesis_plus_gx_libretro" displayName="Retroarch Genesis Plus GX" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\genesis_plus_gx_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="atari2600" defaultEmulator="stella_libretro" displayName="Atari 2600">
+        <emulator name="stella_libretro" displayName="Retroarch Genesis Plus GX" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\stella_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>a26</extension>
+                <extension>bin</extension>
+                <extension>rom</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="atari7800" defaultEmulator="prosystem_libretro" displayName="Atari 7800">
+        <emulator name="prosystem_libretro" displayName="Retroarch prosystem" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\prosystem_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>a78</extension>
+                <extension>bin</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="c64" defaultEmulator="vice_x64_libretro" displayName="Commodore 64">
+        <emulator name="vice_x64_libretro" displayName="Retroarch vice_x64" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\vice_x64_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>crt</extension>
+                <extension>d64</extension>
+                <extension>g64</extension>
+                <extension>t64</extension>
+                <extension>tap</extension>
+                <extension>x64</extension>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="fba" defaultEmulator="fbalpha2012_libretro" displayName="Final Burn Alpha" esPlatform="arcade">
+        <emulator name="fbalpha2012_libretro" displayName="Retroarch fbalpha2012" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\fbalpha2012_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>zip</extension>
+                <extension>fba</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="gba" defaultEmulator="vba_next_libretro" displayName="Nintendo GameBoy Advance">
+        <emulator name="vba_next_libretro" displayName="Retroarch vba_next_libretro" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\vba_next_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>gba</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="gbc" defaultEmulator="gambatte_libretro" displayName="Nintendo GameBoy Color">
+        <emulator name="gambatte_libretro" displayName="Retroarch gambatte_libretro" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\gambatte_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>gbc</extension>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="gc" defaultEmulator="dolphin_libretro" displayName="Nintendo GameCube">
+        <emulator name="dolphin_libretro" displayName="Retroarch dolphin_libretro" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\dolphin_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>iso</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="gamegear" defaultEmulator="genesis_plus_gx_libretro" displayName="Sega GameGear">
+        <emulator name="genesis_plus_gx_libretro" displayName="Retroarch Genesis Plus GX" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\genesis_plus_gx_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="genesis" defaultEmulator="genesis_plus_gx_libretro" displayName="Sega Genesis">
+        <emulator name="genesis_plus_gx_libretro" displayName="Retroarch Genesis Plus GX" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\genesis_plus_gx_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>smd</extension>
+                <extension>bin</extension>
+                <extension>gen</extension>
+                <extension>md</extension>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="mastersystem" displayName="Sega MasterSystem">
+        <emulator name="genesis_plus_gx_libretro" displayName="Retroarch Genesis Plus GX" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\genesis_plus_gx_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>bin</extension>
+                <extension>sms</extension>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="mame" defaultEmulator="mame_libretro" displayName="MAME" esPlatform="arcade">
+        <emulator name="mame_libretro" displayName="Retroarch mame" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\mame_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="megadrive" defaultEmulator="genesis_plus_gx_libretro" displayName="Sega Megadrive">
+        <emulator name="genesis_plus_gx_libretro" displayName="Retroarch Genesis Plus GX" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\genesis_plus_gx_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>smd</extension>
+                <extension>bin</extension>
+                <extension>gen</extension>
+                <extension>md</extension>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="n64" displayName="Nintendo 64">
+        <emulator name="mupen64plus_libretro" displayName="Retroarch mupen64plus" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\mupen64plus_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>z64</extension>
+                <extension>n64</extension>
+                <extension>v64</extension>
+            </extensionOverrides>
+        </emulator>
+        <emulator name="parallel_n64_libretro" displayName="Retroarch parallel_n64_libretro" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\parallel_n64_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>z64</extension>
+                <extension>n64</extension>
+                <extension>v64</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="neogeo" defaultEmulator="fbalpha2012_libretro" displayName="NeoGeo">
+        <emulator name="fbalpha2012_libretro" displayName="Retroarch fbalpha2012" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\fbalpha2012_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="nes" defaultEmulator="nestopia_libretro" displayName="Nintendo Entertainment System">
+        <emulator name="nestopia_libretro" displayName="Retroarch Nestopia" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\nestopia_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>nes</extension>
+            </extensionOverrides>
+        </emulator>
+        <emulator name="fceumm_libretro" displayName="Retroarch Fceumm" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\fceumm_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>nes</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="pcengine" displayName="PC Engine">
+        <emulator name="genesis_plus_gx_libretro" displayName="Retroarch Genesis Plus GX" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\genesis_plus_gx_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="psx" displayName="Sony PlayStation">
+        <emulator name="mednafen_psx_libretro" displayName="Retroarch mednafen psx" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\mednafen_psx_libretro.dll' -nogui -loadbin %ROM%">
+            <extensionOverrides>
+                <extension>cue</extension>
+                <extension>iso</extension>
+                <extension>pbp</extension>
+            </extensionOverrides>
+        </emulator>
+        <emulator name="ePSXe" displayName="ePSXe" path="Emulators\epsxe\ePSXe.exe -bios bios\SCPH1001.BIN -nogui -loadbin %ROM%">
+            <extensionOverrides>
+                <extension>cue</extension>
+                <extension>iso</extension>
+                <extension>pbp</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="ps2" displayName="Sony PlayStation 2">
+        <emulator name="pcsx2" displayName="pcsx2" path="Emulators\pcsx2\pcsx2.exe %ROM% --fullscreen --nogui %ROM%">
+            <extensionOverrides>
+                <extension>iso</extension>
+                <extension>img</extension>
+                <extension>bin</extension>
+                <extension>mdf</extension>
+                <extension>z</extension>
+                <extension>z2</extension>
+                <extension>bz2</extension>
+                <extension>dump</extension>
+                <extension>cso</extension>
+                <extension>ima</extension>
+                <extension>gz</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="sega32x" displayName="Sega 32X">
+        <emulator name="picodrive_libretro" displayName="Retroarch Picodive" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\picodrive_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="snes" defaultEmulator="bsnes_balanced_libretro" displayName="Super Nintendo Entertainment System">
+        <emulator name="bsnes_balanced_libretro" displayName="Retroarch bsnes balanced" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\bsnes_balanced_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>smc</extension>
+                <extension>sfc</extension>
+                <extension>fig</extension>
+                <extension>swc</extension>
+            </extensionOverrides>
+        </emulator>
+        <emulator name="snes9x_libretro" displayName="Retroarch snes9x" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\snes9x_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>smc</extension>
+                <extension>sfc</extension>
+                <extension>fig</extension>
+                <extension>swc</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="zxspectrum" displayName="Sinclair ZX Spectrum">
+        <emulator name="fuse_libretro" displayName="Retroarch Fuse" path="Emulators\retroarch\retroarch -L 'Emulators\retroarch\cores\fuse_libretro.dll' %ROM%">
+            <extensionOverrides>
+                <extension>tap</extension>
+                <extension>zip</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+</systems>
