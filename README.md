@@ -10,11 +10,7 @@ Clone this to it's own folder, then open an administrator powershell and run
 
 This will download and install everything you need.
 
-Once completed start Emulation station from powershell with;
-
-    /scripts/start-es.ps1
-
-(I'll create some shortcuts as part of the install!)
+Once completed start Emulation station by clicking the RetroWin icon on the Desktop!
 
 Other projects which made this one possible;
 

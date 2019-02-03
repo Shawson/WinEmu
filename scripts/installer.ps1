@@ -433,6 +433,14 @@ Set-ItemProperty -Path $path -Name 'CPUOverclocking' -Value '10'
 $scraperZip = $installersFolder + "scraper_windows_amd64*.zip"
 Expand-Archive -Path $scraperZip -Destination $romPath
 
+$wshshell = New-Object -ComObject WScript.Shell
+$desktop = [System.Environment]::GetFolderPath('Desktop')
+$lnk = $wshshell.CreateShortcut($desktop+"\RetroWin.lnk")
+$lnk.TargetPath = "powershell"
+$lnk.Arguments = " -ExecutionPolicy ByPass -File ""$scriptDir\start-es.ps1"""
+$lnk.WorkingDirectory = "$scriptDir\"
+$lnk.Save() 
+
 Write-Host "Install Completed"
 
 Read-Host -Prompt "Press Enter to exit"
