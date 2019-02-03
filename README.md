@@ -11,3 +11,11 @@ Clone this to it's own folder, then open an administrator powershell and run
 This will download and install everything you need.
 
 Once completed start Emulation station with/scripts/start-es.ps1
+
+Other projects which made this one possible;
+
+* Installer script based on a great GitHub repo I sumbled across By Chris Franco https://github.com/Francommit/win10_emulation_station
+* Depends upon jrassa's Windows compilations of Emulation Station - https://github.com/jrassa/EmulationStation
+* Uses RetroArch https://www.libretro.com/
+* Steven Selph's scraper https://github.com/sselph/scraper
+* Powershell package manager Chocolatey https://chocolatey.org/
