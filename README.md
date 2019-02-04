@@ -21,3 +21,4 @@ Other projects which made this one possible;
 * Uses RetroArch https://www.libretro.com/
 * Steven Selph's scraper https://github.com/sselph/scraper
 * Powershell package manager Chocolatey https://chocolatey.org/
+* 7Zip https://www.7-zip.org/download.html
