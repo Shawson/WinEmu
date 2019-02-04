@@ -21,6 +21,8 @@ Other projects which made this one possible;
 * RetroArch https://www.libretro.com/
 * FS-UAE Amiga Emulator https://fs-uae.net/
 * WHDBootLoader (built by HoraceAndTheSpider) from AmiBerry project https://github.com/midwan/amiberry
+* epsxe PS1 Emulator http://www.epsxe.com/
+* PCSX2 PS2 Emulator https://pcsx2.net/
 * Steven Selph's scraper https://github.com/sselph/scraper
 * Powershell package manager Chocolatey https://chocolatey.org/
 * 7Zip https://www.7-zip.org/download.html
