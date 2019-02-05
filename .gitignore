@@ -9,3 +9,6 @@
 /roms
 /bios
 /start-es.log
+/tools
+/autoconfigs
+*.log
