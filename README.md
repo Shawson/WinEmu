@@ -1,6 +1,6 @@
 # RetroWin
 
-I love RetroPie (https://github.com/RetroPie/RetroPie-Setup), but also like Windows.  So the idea of this is a RetroPie style retro enviroment built on Windows using PowerShell.
+I love RetroPie (https://github.com/RetroPie/RetroPie-Setup), but also like Windows.  So the idea of this is a RetroPie style retro-gaming enviroment built on Windows using PowerShell.  It will handle installation of a front-end (emulation station) and all the emulators you'd need for the various retro platforms, as well as unify input configuration, based on a one time controller setup from within emulation station.
 
 Still very much in it's infancy, a lot of this is still being built or tested, so use at your peril.  
 
