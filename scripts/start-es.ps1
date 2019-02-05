@@ -8,7 +8,7 @@ $retroWinRoot = (Get-Item $scriptPath).Parent.FullName
 
         "$([DateTime]::Now.ToString()) Registering es_input.cfg watcher"
 
-        start-job -filepath "$($retroWinRoot)\scripts\start-esinput-watcher.ps1"
+        start-job -name "start-esinput-watcher" -filepath "$($retroWinRoot)\scripts\start-esinput-watcher.ps1"
         
         $env:HOME = "$($retroWinRoot)\"
                
@@ -19,6 +19,8 @@ $retroWinRoot = (Get-Item $scriptPath).Parent.FullName
         "$([DateTime]::Now.ToString()) Launching ES with command: $process $processArgs"
 
         Start-Process -filepath $process -ArgumentList $processArgs -Wait
+
+        stop-job -name "start-esinput-watcher"
 
         "$([DateTime]::Now.ToString()) ES Closed"
     }
