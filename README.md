@@ -26,3 +26,4 @@ Other projects which made this one possible;
 * Steven Selph's scraper https://github.com/sselph/scraper
 * Powershell package manager Chocolatey https://chocolatey.org/
 * 7Zip https://www.7-zip.org/download.html
+* ESGamePadDetect https://github.com/Shawson/ESGamePadDetect
