@@ -126,6 +126,11 @@ $fsuaeEmulator = $installersFolder + "fs-uae_2.8.3_windows_x86.zip"
 $fsuaeEmulatorPath = $retroWinRoot + "\emulators\fs-uae\"
 Expand-Archive -Path $fsuaeEmulator -Destination $fsuaeEmulatorPath
 
+# game pad detect
+$esGamePadDetect = $installersFolder + "ESGamePadDetect.7z"
+$esGamePadDetecPath = $retroWinRoot + "\tools\ESGamePadDetect"
+Expand-Archive -Path $esGamePadDetect -Destination $esGamePadDetecPath
+
 # PSX Setup
 $psxEmulator = $installersFolder + "ePSXe205.zip"
 $psxEmulatorPath = $retroWinRoot + "\emulators\epsxe\"
@@ -152,7 +157,6 @@ while (!(Test-Path $retroarchConfigPath)) {
 }
 
 Stop-Process -Name "retroarch"
-
 
 # 
 # Let's hack that config!
