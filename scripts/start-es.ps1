@@ -1,29 +1,34 @@
 $scriptPath = Split-Path -Path $MyInvocation.MyCommand.Path 
 $retroWinRoot = (Get-Item $scriptPath).Parent.FullName
 
+function log([string]$text) {
+    Add-Content "$retroWinRoot\es-start.log" "$([DateTime]::Now.ToString()) [START-ES] $($text)"
+}
 
-    Try {
+Try {
+    
+    log("Starting esinput-watcher")
+
+    start-job -name "eswatcherjob" -filepath "$($retroWinRoot)\scripts\start-esinput-watcher.ps1" -Arg $retroWinRoot
+
+    log("Starting ES")
         
-        "$([DateTime]::Now.ToString()) Starting ES"
-
-        "$([DateTime]::Now.ToString()) Registering es_input.cfg watcher"
-
-        start-job -filepath "$($retroWinRoot)\scripts\start-esinput-watcher.ps1"
-        
-        $env:HOME = "$($retroWinRoot)\"
+    $env:HOME = "$($retroWinRoot)\"
                
-        $process="$($retroWinRoot)\emulationstation\emulationstation.exe"
-        #$process="notepad.exe"
-        $processArgs="--windowed --resolution 1024 768"
+    $process = "$($retroWinRoot)\emulationstation\emulationstation.exe"
+    $processArgs = "--windowed --resolution 1024 768"
 
-        "$([DateTime]::Now.ToString()) Launching ES with command: $process $processArgs"
+    log("Launching ES with command: $process $processArgs")
 
-        Start-Process -filepath $process -ArgumentList $processArgs -Wait
+    Start-Process -filepath $process -ArgumentList $processArgs -Wait
 
-        "$([DateTime]::Now.ToString()) ES Closed"
-    }
-    Catch {
-        $ErrorMessage = $_.Exception.Message
-        "$([DateTime]::Now.ToString()) Error running script : $ErrorMessage"
-        "$([DateTime]::Now.ToString()) Terminated abnormally"
-    }
+    stop-job -name "eswatcherjob"
+    remove-job -name "eswatcherjob"
+
+    log("ES Closed")
+}
+Catch {
+    $ErrorMessage = $_.Exception.Message
+    log("Error running script : $ErrorMessage")
+    log("Terminated abnormally")
+}

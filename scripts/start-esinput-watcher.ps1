@@ -2,18 +2,21 @@
 [cmdletbinding()]
 
 param (
-    [Parameter()][string]$retroWinRoot = "E:\Emulation\RetroWinDev"
+    [Parameter()][string]$retroWinRoot
 )
+
+function log([string]$text) {
+    Add-Content "$retroWinRoot\es-start.log" "$([DateTime]::Now.ToString()) [ESINPUT-WATCHER] $($text)"
+}
 
 $env:HOME = "$($retroWinRoot)\"
 
-Add-Content "$retroWinRoot\start-esinput-watcher.log" "$([DateTime]::Now.ToString()) Starting es_input.cfg listener"
+log("Starting es_input.cfg listener")
 
 $existingEvent = Get-EventSubscriber | Where { $_.SourceIdentifier -eq "ESINPUTCFG_WATCHER" } | Select -Last 1
 
-if ($existingEvent -ne $null)
-{
-    Add-Content $retroWinRoot\start-esinput-watcher.log "$([DateTime]::Now.ToString()) Watcher already registered- removing and recreating"
+if ($existingEvent -ne $null) {
+    log("Watcher already registered- removing and recreating")
     Unregister-Event -SourceIdentifier "ESINPUTCFG_WATCHER"
 }
 
@@ -25,49 +28,58 @@ $watcher.IncludeSubdirectories = $false
 $watcher.EnableRaisingEvents = $true
 
 $action = { 
-            # grab the latest entry
-            $esInputXml = ( Select-Xml -Path "$($retroWinRoot)\.emulationstation\es_input.cfg" -XPath / ).Node
-            $lastInput = $esInputXml.inputList.inputConfig | Select-Object -Last 1
+    Try {
+        log("es_input.cfg file change detected")
 
-            # call gpd to lookup the real ids
-            $xml= Invoke-Expression "$($retroWinRoot)\tools\ESGamePadDetect\ESGamePadDetect.exe -deviceName=""$($lastInput.deviceName)"" -deviceGUID=""$($lastInput.deviceGUID)""" | Out-String
-            $gpdOutput = (Select-Xml -Content $xml -XPath /).Node
+        # grab the latest entry
+        $esInputXml = ( Select-Xml -Path "$($retroWinRoot)\.emulationstation\es_input.cfg" -XPath / ).Node
+        $lastInput = $esInputXml.inputList.inputConfig | Select-Object -Last 1
 
-            if ($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode -ne 0)
-            {
-                Add-Content $retroWinRoot\start-esinput-watcher.log "$([DateTime]::Now.ToString()) Failed getting controller input"
-                Return
-            }
+        log("grabbing controller ids for $($lastInput.deviceName) $($lastInput.deviceGUID)")
 
-            # map emulation station to retrarch;
-            Try {
-                . ("$retroWinRoot\scripts\control-mapping-retroarch.ps1")
-            }
-            Catch {
-                Add-Content $retroWinRoot\start-esinput-watcher.log "$([DateTime]::Now.ToString()) Could not find $retroWinRoot\scripts\control-mapping-retroarch.ps1"
-                
-                Return
-            }
+        # call gpd to lookup the real ids
+        $xml = Invoke-Expression "$($retroWinRoot)\tools\ESGamePadDetect\ESGamePadDetect.exe -deviceName=""$($lastInput.deviceName)"" -deviceGUID=""$($lastInput.deviceGUID)""" | Out-String
+        $gpdOutput = (Select-Xml -Content $xml -XPath /).Node
 
-            $(
-                Write-Output "input_driver = ""xinput"""
-                Write-Output "input_device = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName)"""
-                Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID)"""
-                Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID)"""
+        if ($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode -ne 0) {
+            log("Failed getting controller input")
+            Return
+        }
 
-                $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
-            ) | Out-File "$retroWinRoot\autoconfigs\$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName).cfg"
+        # map emulation station to retrarch;
+        Try {
+            . ("$retroWinRoot\scripts\control-mapping-retroarch.ps1")
+        }
+        Catch {
+            log("Could not find $retroWinRoot\scripts\control-mapping-retroarch.ps1")
+            Return
+        }
 
-        }     
+        log("successfully found controller ids- generating config")
 
-Add-Content $retroWinRoot\start-esinput-watcher.log "$([DateTime]::Now.ToString()) Registering file watcher"
+        $(
+            Write-Output "input_driver = ""xinput"""
+            Write-Output "input_device = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName)"""
+            Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID)"""
+            Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID)"""
+
+            $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
+        ) | Out-File "$retroWinRoot\autoconfigs\$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName).cfg"
+
+        log("config file written to $retroWinRoot\autoconfigs\$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName).cfg")
+    }
+    Catch {
+        log("Error in file watcher handler : $($_.Exception.Message)")
+    }
+}     
+
+log ("Registering file watcher")
 
 try {
     Register-ObjectEvent $watcher Changed -Action $action -SourceIdentifier "ESINPUTCFG_WATCHER"
 }
-catch 
-{
-    Add-Content $retroWinRoot\start-esinput-watcher.log "$([DateTime]::Now.ToString()) Error $($_.Exception.Message)"
+catch {
+    log ("Error registering event for file system watcher $($_.Exception.Message)")
 }
 
 while ($true) { Start-Sleep 1 }

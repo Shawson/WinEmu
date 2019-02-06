@@ -63,6 +63,8 @@ function GetAxis([String]$name,[String]$id,[String]$value) {
         "down" { $mappedName = "input_down_axis" } 
         "left" { $mappedName = "input_left_axis" } 
         "right" { $mappedName = "input_right_axis" } 
+        "lefttrigger" { $mappedName = "input_l2_axis" } 
+        "righttrigger" { $mappedName = "input_r2_axis" } 
     }
 
     switch($value)
