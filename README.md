@@ -1,4 +1,4 @@
-# RetroWin
+# WinEmu
 
 I love RetroPie (https://github.com/RetroPie/RetroPie-Setup), but also like Windows.  So the idea of this is a RetroPie style retro-gaming enviroment built on Windows using PowerShell.  It will handle installation of a front-end (emulation station) and all the emulators you'd need for the various retro platforms, as well as unify input configuration, based on a one time controller setup from within emulation station.
 
