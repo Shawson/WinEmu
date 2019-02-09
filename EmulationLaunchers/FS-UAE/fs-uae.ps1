@@ -1,3 +1,4 @@
+[cmdletbinding()]
 param (
     [Parameter(Mandatory=$true)][string]$romPath
 )
@@ -39,6 +40,17 @@ function CheckRequiredFolders {
     New-Item -ItemType Directory -Force -Path "$($basePath)\save-data\Kickstarts"
     New-Item -ItemType Directory -Force -Path "$($basePath)\save-data\Savegames"
 
+}
+
+function CopyKickstartsFromBiosFolder {
+
+    param (
+        [Parameter(Mandatory=$true)][String]$basePath
+    )
+
+    $source = "$($basePath)\..\..\bios\amiga\*"
+    $destination = "$($basePath)\save-data\Kickstarts\"
+    Copy-item -Force -Recurse -Verbose $source -Destination $destination
 }
 
 function CheckForKickstarts {
@@ -147,6 +159,8 @@ function FindWHDLoadGameOption {
 }
 
 CheckRequiredFolders -basePath $scriptPath
+
+CopyKickstartsFromBiosFolder -basePath $scriptPath
 
 CheckForKickstarts -basePath $scriptPath
 

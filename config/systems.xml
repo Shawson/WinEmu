@@ -10,7 +10,7 @@
                 <extension>adf</extension>
             </extensionOverrides>
         </emulator>
-        <emulator name="fs-uae-whdload" displayName="FS-UAE" path=".\EmulatorLaunchers\fs-uae\fs-uae.ps1 -romPath %ROM%">
+        <emulator name="fs-uae-whdload" displayName="FS-UAE" path=".\EmulationLaunchers\fs-uae\fs-uae.ps1 -romPath %ROM%">
             <extensionOverrides>
                 <extension>lha</extension>
                 <extension>zip</extension>

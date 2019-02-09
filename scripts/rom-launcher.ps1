@@ -58,7 +58,7 @@ $(
             "Opening selection menu"
         }
 
-        $commandLine = "& $($emulator.path.replace("%ROM%", $romPath)) | Out-Null"
+        $commandLine = "& $($scriptPath)\..\$($emulator.path.replace("%ROM%", $romPath)) | Out-Null"
 
         "Executing: " + $commandLine
 

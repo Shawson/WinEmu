@@ -12,3 +12,6 @@
 /tools
 /autoconfigs
 *.log
+/EmulationLaunchers/fs-uae/*.zip
+/EmulationLaunchers/fs-uae/*.xml
+/EmulationLaunchers/fs-uae/**/*
