@@ -177,6 +177,10 @@ $settingToFind = 'input_player2_analog_dpad_mode = "0"'
 $settingToSet = 'input_player2_analog_dpad_mode = "1"'
 (Get-Content $retroarchConfigPath) -replace $settingToFind, $settingToSet | Set-Content $retroarchConfigPath
 
+$settingToFind = 'joypad_autoconfig_dir = ":\autoconfig"'
+$settingToSet = 'joypad_autoconfig_dir = "' + $retroWinRoot + '\autoconfigs"'
+(Get-Content $retroarchConfigPath) -replace $settingToFind, $settingToSet | Set-Content $retroarchConfigPath
+
 
 # Setup Rom & BIOS Folders
 $romPath =  $retroWinRoot+"\roms"
