@@ -6,7 +6,7 @@ param (
 
 # get paths
 $scriptPath = Split-Path -Path $MyInvocation.MyCommand.Path 
-$retroWinRoot = "$($scriptPath)\..\..\"
+$retroWinRoot = (Get-Item $scriptPath).Parent.Parent.FullName
 
 if (-not (test-path "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe")) {throw "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe missing"} 
 set-alias emu "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe"
