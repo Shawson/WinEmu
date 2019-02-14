@@ -1,4 +1,28 @@
-﻿function GetMappedControl([String]$type, [String]$name,[String]$id,[String]$value)
+﻿function GetControllerName([string] $name, [int32] $index)
+ {
+  <#
+    # if its xbox 360
+    
+    {
+       "XInput Controller (User 1)",
+       "XInput Controller (User 2)",
+       "XInput Controller (User 3)",
+       "XInput Controller (User 4)"
+    };
+
+    # if name contains Xbox One For Windows
+   
+    {
+       "XBOX One Controller (User 1)",
+       "XBOX One Controller (User 2)",
+       "XBOX One Controller (User 3)",
+       "XBOX One Controller (User 4)"
+    };
+    #>
+    return $name
+ }
+ 
+ function GetMappedControl([String]$type, [String]$name,[String]$id,[String]$value)
 {
     switch ($type) 
     { 
