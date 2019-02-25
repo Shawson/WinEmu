@@ -1,4 +1,4 @@
-﻿function GetControllerName([string]$deviceName, [string]$driverName, [int]$controllerIndex)
+function GetControllerName([string]$deviceName, [string]$driverName, [int]$controllerIndex)
 {
     if ($driverName -eq "xinput")
     {
@@ -14,7 +14,7 @@
     return $deviceName
 }
 
-function GetMappedControl([String]$type, [String]$name, [String]$id, [String]$value)
+ function GetMappedControl([String]$type, [String]$name,[String]$id,[String]$value)
 {
     switch ($type) 
     { 
