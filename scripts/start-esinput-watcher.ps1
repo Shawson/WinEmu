@@ -46,15 +46,6 @@ $action = {
             Return
         }
 
-        # map emulation station to retrarch;
-        Try {
-            . ("$retroWinRoot\scripts\control-mapping-retroarch.ps1")
-        }
-        Catch {
-            log("Could not find $retroWinRoot\scripts\control-mapping-retroarch.ps1")
-            Return
-        }
-
         Try {
             . ("$retroWinRoot\scripts\es-xml-tools.ps1")
         }
