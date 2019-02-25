@@ -15,17 +15,10 @@ set-alias emu "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe"
 
 # map emulation station to retrarch;
 Try {
-    . ("$retroWinRoot\scripts\control-mapping-retroarch.ps1")
+    . ("$scriptPath\control-mapping-retroarch.ps1")
 }
 Catch {
-    log("Could not find $retroWinRoot\scripts\control-mapping-retroarch.ps1")
-    Return
-}
-Try {
-    . ("$retroWinRoot\scripts\ps-ini.ps1")
-}
-Catch {
-    log("Could not find $retroWinRoot\scripts\ps-ini.ps1")
+    log("Could not find $scriptPath\control-mapping-retroarch.ps1")
     Return
 }
 
@@ -42,10 +35,6 @@ if ($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers.Resp
 log("successfully found controller ids- generating config")
 
 $inputConfigs = ( Select-Xml -Path "$retroWinRoot\config\input.xml" -XPath / ).Node
-
-<#
-Copy-Item "$retroWinRoot\emulators\retroarch\retroarch.cfg" "$retroWinRoot\emulators\retroarch\retroarch.cfgbak"
-$retroArchCfg = Get-IniContent "$retroWinRoot\emulators\retroarch\retroarch.cfg"
 
 $attachedControllers.data.controller | ForEach-Object {
 
@@ -71,27 +60,31 @@ $attachedControllers.data.controller | ForEach-Object {
     if ($null -ne $thisControllerInputConfig)
     {
         # we have a match, so lets do the mapping
-        
-        # Out-IniFile
+        $(
+            $driverName = "xinput";
+
+            if ($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.IsXInput)
+            {
+                Write-Output "input_driver = ""xinput"""
+            }
+            else {
+                Write-Output "input_driver = ""dinput"""
+                $driverName = "dinput"
+            }
+
+            $controllerName = GetControllerName -deviceName $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName -driverName $driverName -controllerIndex $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.ControllerIndex
+
+            Write-Output "input_device = ""$($controllerName)"""
+            Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID)"""
+            Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID)"""
+
+            $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
+        ) | Out-File "$retroWinRoot\authconfigs\$($controllerName).cfg"
+
+        log("config file written to $retroWinRoot\authconfigs\$($controllerName).cfg")
     }
 
 }
-
-Out-IniFile $retroArchCfg "$retroWinRoot\emulators\retroarch\retroarch.cfg"  
-#>
-
-$(
-    # not everything should be xinput- check flag in windows device name
-    Write-Output "input_driver = ""xinput"""
-    Write-Output "input_device = ""$(GetControllerName $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName)"""
-    Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID)"""
-    Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID)"""
-
-    $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
-) | Out-File "$retroWinRoot\emulators\retroarch\retroarch.cfg"
-
-
-log("config file written to $retroWinRoot\emulators\retroarch\retroarch.cfg")
 
 $commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + " " + $($romPath)
 
@@ -100,6 +93,3 @@ $commandString += " | Out-Null"
 $commandString
 
 Invoke-Expression $commandString 
-
-Delete-item "$retroWinRoot\emulators\retroarch\retroarch.cfg"
-Rename-Item "$retroWinRoot\emulators\retroarch\retroarch.cfgbak" "$retroWinRoot\emulators\retroarch\retroarch.cfg"
