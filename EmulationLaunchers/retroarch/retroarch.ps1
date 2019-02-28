@@ -4,92 +4,105 @@ param (
     [Parameter(Mandatory=$true)][string]$coreName
 )
 
-# get paths
 $scriptPath = Split-Path -Path $MyInvocation.MyCommand.Path 
 $retroWinRoot = (Get-Item $scriptPath).Parent.Parent.FullName
 
-if (-not (test-path "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe")) {throw "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe missing"} 
-set-alias emu "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe"
+function log([string]$text) {
+    Add-Content "$retroWinRoot\last-run.log" "$([DateTime]::Now.ToString()) [retroarch] $($text)"
+}
 
-# update the retroarch config file with attached controls
-
-# map emulation station to retrarch;
 Try {
-    . ("$scriptPath\control-mapping-retroarch.ps1")
-}
-Catch {
-    log("Could not find $scriptPath\control-mapping-retroarch.ps1")
-    Return
-}
+    # get paths
+    
 
-log("getting attached controllers")
+    if (-not (test-path "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe")) {throw "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe missing"} 
+    set-alias emu "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe"
 
-$xml = Invoke-Expression "$($retroWinRoot)\tools\ESGamePadDetect\ESGamePadDetect.exe -list" | Out-String
-$attachedControllers = (Select-Xml -Content $xml -XPath /).Node
+    # update the retroarch config file with attached controls
 
-if ($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode -ne 0) {
-    log("Failed getting controller input")
-    Return
-}
+    # map emulation station to retroarch;
+    Try {
+        . ("$scriptPath\control-mapping-retroarch.ps1")
+    }
+    Catch {
+        log("Could not find $scriptPath\control-mapping-retroarch.ps1")
+        Return
+    }
 
-log("successfully found controller ids- generating config")
+    log("getting attached controllers")
 
-$inputConfigs = ( Select-Xml -Path "$retroWinRoot\config\input.xml" -XPath / ).Node
+    $xml = Invoke-Expression "$($retroWinRoot)\tools\ESGamePadDetect\ESGamePadDetect.exe -list" | Out-String
+    $attachedControllers = (Select-Xml -Content $xml -XPath /).Node
 
-$attachedControllers.data.controller | ForEach-Object {
+    if ($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode -ne 0) {
+        log("Failed getting controller input : $($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers)")
+        Return
+    }
 
-    $thisAttachedController = $_
+    log("successfully found controller ids- generating config")
 
-    $thisControllerInputConfig = $inputConfigs.inputList.inputConfig | Where-Object { 
-        $_.pid -eq $thisAttachedController.PID -and
-        $_.vid -eq $thisAttachedController.VID -and
-        $_.deviceName -eq $thisAttachedController.DeviceName -and
-        $_.controllerIndex -eq $thisAttachedController.ControllerIndex
-    } | Select-Object -Last 1
+    $inputConfigs = ( Select-Xml -Path "$retroWinRoot\config\input.xml" -XPath / ).Node
 
-    if ($null -eq $thisControllerInputConfig)
-    {
-        # try again but don't specify the controller index
+    $attachedControllers.data.controller | ForEach-Object {
+
+        $thisAttachedController = $_
+
         $thisControllerInputConfig = $inputConfigs.inputList.inputConfig | Where-Object { 
             $_.pid -eq $thisAttachedController.PID -and
             $_.vid -eq $thisAttachedController.VID -and
-            $_.deviceName -eq $thisAttachedController.DeviceName
+            $_.deviceName -eq $thisAttachedController.DeviceName -and
+            $_.controllerIndex -eq $thisAttachedController.ControllerIndex
         } | Select-Object -Last 1
+
+        if ($null -eq $thisControllerInputConfig)
+        {
+            # try again but don't specify the controller index
+            $thisControllerInputConfig = $inputConfigs.inputList.inputConfig | Where-Object { 
+                $_.pid -eq $thisAttachedController.PID -and
+                $_.vid -eq $thisAttachedController.VID -and
+                $_.deviceName -eq $thisAttachedController.DeviceName
+            } | Select-Object -Last 1
+        }
+
+        if ($null -ne $thisControllerInputConfig)
+        {
+            # we have a match, so lets do the mapping
+            $(
+                $driverName = "xinput";
+
+                if ($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.IsXInput)
+                {
+                    Write-Output "input_driver = ""xinput"""
+                }
+                else {
+                    Write-Output "input_driver = ""dinput"""
+                    $driverName = "dinput"
+                }
+
+                $controllerName = GetControllerName -deviceName $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName -driverName $driverName -controllerIndex $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.ControllerIndex
+
+                Write-Output "input_device = ""$($controllerName)"""
+                Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID)"""
+                Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID)"""
+
+                $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
+            ) | Out-File "$retroWinRoot\authconfigs\$($controllerName).cfg"
+
+            log("config file written to $retroWinRoot\authconfigs\$($controllerName).cfg")
+        }
+
     }
 
-    if ($null -ne $thisControllerInputConfig)
-    {
-        # we have a match, so lets do the mapping
-        $(
-            $driverName = "xinput";
+    $commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + " " + $($romPath)
 
-            if ($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.IsXInput)
-            {
-                Write-Output "input_driver = ""xinput"""
-            }
-            else {
-                Write-Output "input_driver = ""dinput"""
-                $driverName = "dinput"
-            }
+    $commandString += " | Out-Null"
 
-            $controllerName = GetControllerName -deviceName $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName -driverName $driverName -controllerIndex $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.ControllerIndex
+    $commandString
 
-            Write-Output "input_device = ""$($controllerName)"""
-            Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID)"""
-            Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID)"""
-
-            $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
-        ) | Out-File "$retroWinRoot\authconfigs\$($controllerName).cfg"
-
-        log("config file written to $retroWinRoot\authconfigs\$($controllerName).cfg")
-    }
+    Invoke-Expression $commandString 
 
 }
-
-$commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + " " + $($romPath)
-
-$commandString += " | Out-Null"
-
-$commandString
-
-Invoke-Expression $commandString 
+Catch {
+    $ErrorMessage = $_.Exception.Message
+    log("Error in retroarch.ps1 : $ErrorMessage")
+}
