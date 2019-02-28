@@ -15,8 +15,8 @@ Try {
     # get paths
     
 
-    if (-not (test-path "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe")) {throw "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe missing"} 
-    set-alias emu "$($scriptPath)\..\..\emulators\retroarch\retroarch.exe"
+    if (-not (test-path "$($retroWinRoot)\emulators\retroarch\retroarch.exe")) {throw "$($retroWinRoot)\emulators\retroarch\retroarch.exe missing"} 
+    set-alias emu "$($retroWinRoot)\emulators\retroarch\retroarch.exe"
 
     # update the retroarch config file with attached controls
 
@@ -35,7 +35,9 @@ Try {
     $attachedControllers = (Select-Xml -Content $xml -XPath /).Node
 
     if ($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode -ne 0) {
-        log("Failed getting controller input : $($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers)")
+        log("XML : $($xml)")
+        log("XML : $($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers)")
+        log("Failed getting controller input - ResponseCode : $($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode)")
         Return
     }
 
