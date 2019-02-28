@@ -1,11 +1,11 @@
 
-function MakeInputNode([System.Xml.XmlDocument]$document, [System.Xml.XmlElement]$newControllerElement, [string] $type, [string] $name, [string] $id, [string] $value) {
+function MakeInputNode([System.Xml.XmlDocument]$document, [System.Xml.XmlElement]$newControllerElement, [string] $type, [string] $name) {
 
     $newNode = $document.CreateElement("input")
     $newNode.SetAttribute("name",$name)
     $newNode.SetAttribute("type",$type)
-    $newNode.SetAttribute("id",$id)
-    $newNode.SetAttribute("value",$value)
+    $newNode.SetAttribute("id","")
+    $newNode.SetAttribute("value","")
 
     $newControllerElement.AppendChild($newNode)
 }

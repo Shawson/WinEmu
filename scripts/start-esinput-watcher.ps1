@@ -66,7 +66,7 @@ $action = {
         
         $configFile = ( Select-Xml -Path "$retroWinRoot\config\input.xml" -XPath / ).Node
         
-        $existingControllerDef = $esInputXml.inputList.inputConfig | Where-Object { 
+        $existingControllerDef = $configFile.inputList.inputConfig | Where-Object { 
             $_.deviceName -eq $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName -and
             $_.pid -eq $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID -and
             $_.vid -eq $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID -and
