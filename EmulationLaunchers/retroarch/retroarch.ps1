@@ -85,14 +85,14 @@ Try {
                 $controllerName = GetControllerName -deviceName $thisAttachedController.DeviceName -driverName $driverName -controllerIndex $thisAttachedController.ControllerIndex
 
                 Write-Output "input_device = ""$($controllerName)"""
-                #Write-Output "input_vendor_id = ""$($thisAttachedController.VID)"""
-                #Write-Output "input_product_id = ""$($thisAttachedController.PID)"""
-                Write-Output "input_display_name = ""WinEMU : $controllerName"""
+                Write-Output "input_vendor_id = $($thisAttachedController.VID)"
+                Write-Output "input_product_id = $($thisAttachedController.PID)"
+                Write-Output "input_device_display_name = ""WinEMU $controllerName"""
 
                 $thisControllerInputConfig.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
-            ) #| Out-File "$retroWinRoot\autoconfigs\$($controllerName).cfg"
+            ) | Out-File "$retroWinRoot\emulators\retroarch\autoconfigs\$($controllerName).cfg" -Encoding ascii
 
-            log("config file written to $retroWinRoot\autoconfigs\$($controllerName).cfg")
+            log("config file written to $retroWinRoot\emulators\retroarch\autoconfigs\$($controllerName).cfg")
         }
 
     }
