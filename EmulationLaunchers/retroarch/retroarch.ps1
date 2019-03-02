@@ -34,6 +34,7 @@ Try {
     $xml = Invoke-Expression "$($retroWinRoot)\tools\ESGamePadDetect\ESGamePadDetect.exe -list" | Out-String
     $attachedControllers = (Select-Xml -Content $xml -XPath /).Node
 
+
     if ($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers.ResponseCode -ne 0) {
         log("XML : $($xml)")
         log("XML : $($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers)")
@@ -45,7 +46,7 @@ Try {
 
     $inputConfigs = ( Select-Xml -Path "$retroWinRoot\config\input.xml" -XPath / ).Node
 
-    $attachedControllers.data.controller | ForEach-Object {
+    $attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiersBaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.Controller | ForEach-Object {
 
         $thisAttachedController = $_
 
@@ -72,7 +73,7 @@ Try {
             $(
                 $driverName = "xinput";
 
-                if ($gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.IsXInput)
+                if ($thisAttachedController.IsXInput)
                 {
                     Write-Output "input_driver = ""xinput"""
                 }
@@ -81,11 +82,11 @@ Try {
                     $driverName = "dinput"
                 }
 
-                $controllerName = GetControllerName -deviceName $gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.DeviceName -driverName $driverName -controllerIndex $gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.ControllerIndex
+                $controllerName = GetControllerName -deviceName $thisAttachedController.DeviceName -driverName $driverName -controllerIndex $thisAttachedController.ControllerIndex
 
                 Write-Output "input_device = ""$($controllerName)"""
-                Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.VID)"""
-                Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.PID)"""
+                Write-Output "input_vendor_id = ""$($thisAttachedController.VID)"""
+                Write-Output "input_product_id = ""$($thisAttachedController.PID)"""
 
                 $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
             ) | Out-File "$retroWinRoot\authconfigs\$($controllerName).cfg"
