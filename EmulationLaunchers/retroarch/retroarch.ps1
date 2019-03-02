@@ -96,7 +96,7 @@ Try {
 
     }
 
-    $commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + " " + $($romPath)
+    $commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + "' '" + $($romPath) + "'"
 
     $commandString += " | Out-Null"
 
