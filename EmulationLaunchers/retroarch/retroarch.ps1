@@ -36,8 +36,7 @@ Try {
 
 
     if ($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers.ResponseCode -ne 0) {
-        log("XML : $($xml)")
-        log("XML : $($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers)")
+        log("attachedControllers XML : $($xml)")
         log("Failed getting controller input - ResponseCode : $($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers.ResponseCode)")
         Return
     }

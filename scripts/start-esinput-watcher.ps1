@@ -6,7 +6,7 @@ param (
 )
 
 function log([string]$text) {
-    Add-Content "$retroWinRoot\es-start.log" "$([DateTime]::Now.ToString()) [ESINPUT-WATCHER] $($text)"
+    Add-Content "$retroWinRoot\last-run.log" "$([DateTime]::Now.ToString()) [ESINPUT-WATCHER] $($text)"
 }
 
 $env:HOME = "$($retroWinRoot)\"

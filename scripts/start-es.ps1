@@ -2,7 +2,7 @@ $scriptPath = Split-Path -Path $MyInvocation.MyCommand.Path
 $retroWinRoot = (Get-Item $scriptPath).Parent.FullName
 
 function log([string]$text) {
-    Add-Content "$retroWinRoot\es-start.log" "$([DateTime]::Now.ToString()) [START-ES] $($text)"
+    Add-Content "$retroWinRoot\last-run.log" "$([DateTime]::Now.ToString()) [START-ES] $($text)"
 }
 
 Try {
