@@ -46,7 +46,7 @@ Try {
 
     $inputConfigs = ( Select-Xml -Path "$retroWinRoot\config\input.xml" -XPath / ).Node
 
-    $attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiersBaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.Controller | ForEach-Object {
+    $attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.GameControllerIdentifiers | ForEach-Object {
 
         $thisAttachedController = $_
 
@@ -85,13 +85,14 @@ Try {
                 $controllerName = GetControllerName -deviceName $thisAttachedController.DeviceName -driverName $driverName -controllerIndex $thisAttachedController.ControllerIndex
 
                 Write-Output "input_device = ""$($controllerName)"""
-                Write-Output "input_vendor_id = ""$($thisAttachedController.VID)"""
-                Write-Output "input_product_id = ""$($thisAttachedController.PID)"""
+                #Write-Output "input_vendor_id = ""$($thisAttachedController.VID)"""
+                #Write-Output "input_product_id = ""$($thisAttachedController.PID)"""
+                Write-Output "input_display_name = ""WinEMU : $controllerName"""
 
-                $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
-            ) | Out-File "$retroWinRoot\authconfigs\$($controllerName).cfg"
+                $thisControllerInputConfig.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
+            ) #| Out-File "$retroWinRoot\autoconfigs\$($controllerName).cfg"
 
-            log("config file written to $retroWinRoot\authconfigs\$($controllerName).cfg")
+            log("config file written to $retroWinRoot\autoconfigs\$($controllerName).cfg")
         }
 
     }
@@ -100,9 +101,11 @@ Try {
 
     $commandString += " | Out-Null"
 
-    $commandString
+    log($commandString)
 
-    Invoke-Expression $commandString 
+    $emuout = Invoke-Expression $commandString 
+
+    log($emuout)
 
 }
 Catch {

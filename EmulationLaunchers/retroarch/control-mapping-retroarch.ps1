@@ -2,12 +2,12 @@ function GetControllerName([string]$deviceName, [string]$driverName, [int]$contr
 {
     if ($driverName -eq "xinput")
     {
-        if ($deviceName -contains "Xbox One For Windows")
+        if ($deviceName -like "*Xbox One For Windows*")
         {
-            return "XBOX One Controller (User 1)"
+            return "XBOX One Controller (User $($controllerIndex + 1))"
         }
         else {
-            return "XInput Controller (User 1)"
+            return "XInput Controller (User $($controllerIndex + 1))"
         }
     }
 
