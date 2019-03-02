@@ -4,16 +4,21 @@ param (
 )
 
 $scriptPath = Split-Path -Path $MyInvocation.MyCommand.Path 
+$retroWinRoot = (Get-Item $scriptPath).Parent.FullName
 
-$(
+#$(
     Try {
-        "Running rom-launcher"
+        function log([string]$text) {
+            Add-Content "$retroWinRoot\last-run.log" "$([DateTime]::Now.ToString()) [rom-launcher] $($text)"
+        }
+
+        log("Running rom-launcher")
 
         Try {
             . ("$scriptPath\drawmenu.ps1")
         }
         Catch {
-            "Could not find $scriptPath\drawmenu.ps1"
+            log "Could not find $scriptPath\drawmenu.ps1"
             Return
         }
 
@@ -21,10 +26,10 @@ $(
         $romName = [io.path]::GetFileNameWithoutExtension($romPath)
         $romExtension = [io.path]::GetExtension($romPath).Replace(".","").Replace("'","")
 
-        "System Name : " + $systemName
-        "Rom Path : " + $romPath
-        "Rom Name : " + $romName
-        "Rom Extension : " + $romExtension
+        log("System Name : $systemName")
+        log("Rom Path : $romPath")
+        log("Rom Name : $romName")
+        log("Rom Extension : $romExtension")
 
         Write-Host "Rom Launcher starting $romName"
 
@@ -39,7 +44,7 @@ $(
             $emulator = $systemSettings.emulator | Select-Object -first 1
         }
 
-        "Selected default emulator for system : " + $emulator.name
+        log("Selected default emulator for system : $($emulator.name)")
 
         # check for any file extension overrides
 
@@ -47,29 +52,29 @@ $(
 
         if ($null -ne $extensionOverride) {
             $emulator = $extensionOverride
-            "Selected emulator override based on file extension : " + $emulator.name
+            log  "Selected emulator override based on file extension : " + $emulator.name
         }
 
         $showMenu = $false
-        $showMenu = TimedPrompt "Launching $($romName) with $($emulator.displayname) - Press any key to change" 3
+        #$showMenu = TimedPrompt "Launching $($romName) with $($emulator.displayname) - Press any key to change" 1
 
         if ($showMenu -eq $true)
         {
-            "Opening selection menu"
+            log ("Opening selection menu")
         }
 
         $commandLine = "& $($scriptPath)\..\$($emulator.path.replace("%ROM%", $romPath)) | Out-Null"
 
-        "Executing: " + $commandLine
+        log ("Executing: $commandLine")
 
         cd "$scriptPath\.."
         Invoke-Expression $commandLine
 
-        "Emulator has finished"
+        log ("Emulator has finished")
     }
     Catch {
         $ErrorMessage = $_.Exception.Message
-        "Error running script : $ErrorMessage"
-        "Terminated abnormally"
+        log ("Error running script : $ErrorMessage")
+        log ("Terminated abnormally")
     }
-) | Tee-Object -FilePath "$scriptPath\..\last-run.log"
+#) | Tee-Object -FilePath "$scriptPath\..\last-run.log"

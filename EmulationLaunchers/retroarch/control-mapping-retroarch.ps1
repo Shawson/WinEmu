@@ -1,4 +1,20 @@
-﻿function GetMappedControl([String]$type, [String]$name,[String]$id,[String]$value)
+function GetControllerName([string]$deviceName, [string]$driverName, [int]$controllerIndex)
+{
+    if ($driverName -eq "xinput")
+    {
+        if ($deviceName -like "*Xbox One For Windows*")
+        {
+            return "XBOX One Controller (User $($controllerIndex + 1))"
+        }
+        else {
+            return "XInput Controller (User $($controllerIndex + 1))"
+        }
+    }
+
+    return $deviceName
+}
+
+ function GetMappedControl([String]$type, [String]$name,[String]$id,[String]$value)
 {
     switch ($type) 
     { 
@@ -8,7 +24,7 @@
     }
 }
 
-function GetButton([String]$name,[String]$id,[String]$value) {
+function GetButton([String]$name, [String]$id, [String]$value) {
 
     $mappedName = "unknown"
 
@@ -29,7 +45,7 @@ function GetButton([String]$name,[String]$id,[String]$value) {
     return "$($mappedName) = ""$($id)"""
 }
 
-function GetHat([String]$name,[String]$id,[String]$value) {
+function GetHat([String]$name, [String]$id, [String]$value) {
     
     switch($name){
         "down" { $mappedName = "input_down_btn" }
@@ -48,7 +64,7 @@ function GetHat([String]$name,[String]$id,[String]$value) {
     return "$($mappedName) = ""h$($id)$($hatValue)"""
 }
 
-function GetAxis([String]$name,[String]$id,[String]$value) {
+function GetAxis([String]$name, [String]$id, [String]$value) {
 
     switch($name){
         "leftanalogdown" { $mappedName = "input_l_y_minus_axis" }
