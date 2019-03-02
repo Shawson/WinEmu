@@ -34,10 +34,10 @@ Try {
     $xml = Invoke-Expression "$($retroWinRoot)\tools\ESGamePadDetect\ESGamePadDetect.exe -list" | Out-String
     $attachedControllers = (Select-Xml -Content $xml -XPath /).Node
 
-    if ($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode -ne 0) {
+    if ($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers.ResponseCode -ne 0) {
         log("XML : $($xml)")
-        log("XML : $($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers)")
-        log("Failed getting controller input - ResponseCode : $($attachedControllers.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode)")
+        log("XML : $($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers)")
+        log("Failed getting controller input - ResponseCode : $($attachedControllers.BaseCommandLineResponseOfListOfGameControllerIdentifiers.ResponseCode)")
         Return
     }
 
@@ -72,7 +72,7 @@ Try {
             $(
                 $driverName = "xinput";
 
-                if ($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.IsXInput)
+                if ($gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.IsXInput)
                 {
                     Write-Output "input_driver = ""xinput"""
                 }
@@ -81,11 +81,11 @@ Try {
                     $driverName = "dinput"
                 }
 
-                $controllerName = GetControllerName -deviceName $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.DeviceName -driverName $driverName -controllerIndex $gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.ControllerIndex
+                $controllerName = GetControllerName -deviceName $gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.DeviceName -driverName $driverName -controllerIndex $gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.ControllerIndex
 
                 Write-Output "input_device = ""$($controllerName)"""
-                Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.VID)"""
-                Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.Data.PID)"""
+                Write-Output "input_vendor_id = ""$($gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.VID)"""
+                Write-Output "input_product_id = ""$($gpdOutput.BaseCommandLineResponseOfListOfGameControllerIdentifiers.Data.PID)"""
 
                 $lastInput.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
             ) | Out-File "$retroWinRoot\authconfigs\$($controllerName).cfg"
