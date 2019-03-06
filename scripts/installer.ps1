@@ -25,6 +25,14 @@ Catch {
     Return
 }
 
+Try {
+    . ("$scriptDir\ps-ini.ps1")
+}
+Catch {
+    "Could not find $scriptDir\archives.ps1"
+    Return
+}
+
 choco install directx -y
 choco install 7zip -y
 choco install dotnet4.6.1 -y
@@ -110,7 +118,10 @@ Stop-Process -Name "emulationstation"
 $retroArchPath = $retroWinRoot + "\emulators\retroarch\"
 New-Item -ItemType Directory -Force -Path $retroArchPath
 
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\SaveData\retroarch\"
+New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves"
+New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves\User\Wii"
+New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves\User\GC"
+New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves\User\Config"
 
 $retroArchBinary = $installersFolder + "RetroArch.7z"
 Expand-Archive -Path $retroArchBinary -Destination $retroArchPath
@@ -124,7 +135,7 @@ Get-ChildItem $installersFolder | where { $_.Name.EndsWith("_libretro.dll.zip") 
 }
 
 # fs-uae Setup
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\SaveData\fs-uae\"
+New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\fs-uae\"
 
 $fsuaeEmulator = $installersFolder + "fs-uae_2.8.3_windows_x86.zip"
 $fsuaeEmulatorPath = $retroWinRoot + "\emulators\fs-uae\"
@@ -136,14 +147,14 @@ $esGamePadDetecPath = $retroWinRoot + "\tools\ESGamePadDetect"
 Expand-Archive -Path $esGamePadDetect -Destination $esGamePadDetecPath
 
 # PSX Setup
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\SaveData\epsxe\"
+New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\epsxe\"
 $psxEmulator = $installersFolder + "ePSXe205.zip"
 $psxEmulatorPath = $retroWinRoot + "\emulators\epsxe\"
 New-Item -ItemType Directory -Force -Path $psxEmulatorPath
 Expand-Archive -Path $psxEmulator -Destination $psxEmulatorPath
 
 # PS2 Setup
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\SaveData\pcsx2\"
+New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\pcsx2\"
 $ps2Emulator = $installersFolder + "pcsx2-1.4.0-binaries.7z"
 $ps2ExtractionPath = $retroWinRoot + "\emulators\"
 Expand-Archive -Path $ps2Emulator -Destination $ps2ExtractionPath
@@ -167,26 +178,19 @@ Stop-Process -Name "retroarch"
 # 
 # Let's hack that config!
 # 
-$settingToFind = 'video_fullscreen = "false"'
-$settingToSet = 'video_fullscreen = "true"'
-(Get-Content $retroarchConfigPath) -replace $settingToFind, $settingToSet | Set-Content $retroarchConfigPath
 
-$settingToFind = 'savestate_auto_load = "false"'
-$settingToSet = 'savestate_auto_load = "true"'
-(Get-Content $retroarchConfigPath) -replace $settingToFind, $settingToSet | Set-Content $retroarchConfigPath
+$retroarchCfg = Get-IniContent -FilePath $retroarchConfigPath
 
-$settingToFind = 'input_player1_analog_dpad_mode = "0"'
-$settingToSet = 'input_player1_analog_dpad_mode = "1"'
-(Get-Content $retroarchConfigPath) -replace $settingToFind, $settingToSet | Set-Content $retroarchConfigPath
+$retroarchCfg["No-Section"]["video_fullscreen"] = """true"""
+$retroarchCfg["No-Section"]["savestate_auto_load"] = """true"""
+$retroarchCfg["No-Section"]["input_player1_analog_dpad_mode"] = """1"""
+$retroarchCfg["No-Section"]["input_player2_analog_dpad_mode"] = """1"""
+$retroarchCfg["No-Section"]["joypad_autoconfig_dir"] = """$retroWinRoot\autoconfigs"""
+$retroarchCfg["No-Section"]["savefile_directory"] = """$retroWinRoot\savedata\retroarch\saves"""
 
-$settingToFind = 'input_player2_analog_dpad_mode = "0"'
-$settingToSet = 'input_player2_analog_dpad_mode = "1"'
-(Get-Content $retroarchConfigPath) -replace $settingToFind, $settingToSet | Set-Content $retroarchConfigPath
-
-#$settingToFind = 'joypad_autoconfig_dir = ":\autoconfig"'
-#$settingToSet = 'joypad_autoconfig_dir = "' + $retroWinRoot + '\autoconfigs"'
-#(Get-Content $retroarchConfigPath) -replace $settingToFind, $settingToSet | Set-Content $retroarchConfigPath
-
+Out-IniFile $retroarchCfg["No-Section"] -FilePath $retroarchConfigPath -Encoding "UTF8" -Force -SpacesAroundEquals
+$utf8NoBomEncoding = New-Object System.Text.UTF8Encoding($False) 
+[System.IO.File]::WriteAllLines( $retroarchConfigPath, (Get-Content  $retroarchConfigPath), $utf8NoBomEncoding) 
 
 # Setup Rom & BIOS Folders
 $romPath =  $retroWinRoot+"\roms"
@@ -251,8 +255,8 @@ New-Item -ItemType Directory -Force -Path $requiredTmpFolder
 # 
 # 14. Generate ini file for Dolphin.
 # 
-$dolphinConfigFile = $retroWinRoot+"\.emulationstation\systems\retroarch\saves\User\Config\Dolphin.ini"
-$dolphinConfigFolder = $retroWinRoot+"\.emulationstation\systems\retroarch\saves\User\Config\"
+$dolphinConfigFile = "$retroWinRoot\savedata\retroarch\saves\User\Config\Dolphin.ini"
+$dolphinConfigFolder = "$retroWinRoot\savedata\retroarch\saves\User\Config\"
 $dolphinConfigFileContent = "[General]
 LastFilename = 
 ShowLag = False
@@ -262,7 +266,7 @@ RecursiveISOPaths = False
 NANDRootPath = 
 DumpPath = 
 WirelessMac = 
-WiiSDCardPath = $retroWinRoot\.emulationstation\systems\retroarch\saves\User\Wii\sd.raw
+WiiSDCardPath = $retroWinRoot\savedata\retroarch\saves\User\Wii\sd.raw
 [Interface]
 ConfirmStop = True
 UsePanicHandlers = True
@@ -350,8 +354,8 @@ DPL2Decoder = False
 Latency = 2
 AudioStretch = False
 AudioStretchMaxLatency = 80
-MemcardAPath = $retroWinRoot\.emulationstation\systems\retroarch\saves\User\GC\MemoryCardA.USA.raw
-MemcardBPath = $retroWinRoot\.emulationstation\systems\retroarch\saves\User\GC\MemoryCardB.USA.raw
+MemcardAPath = $retroWinRoot\savedata\retroarch\saves\User\GC\MemoryCardA.USA.raw
+MemcardBPath = $retroWinRoot\savedata\retroarch\saves\User\GC\MemoryCardB.USA.raw
 AgpCartAPath = 
 AgpCartBPath = 
 SlotA = 1

@@ -89,9 +89,9 @@ Try {
                 Write-Output "input_device_display_name = ""WinEMU $controllerName"""
 
                 $thisControllerInputConfig.input | ForEach-Object { GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value }
-            ) | Out-File "$retroWinRoot\emulators\retroarch\autoconfigs\$($controllerName).cfg" -Encoding ascii
+            ) | Out-File "$retroWinRoot\autoconfigs\$($controllerName).cfg" -Encoding ascii
 
-            log("config file written to $retroWinRoot\emulators\retroarch\autoconfigs\$($controllerName).cfg")
+            log("config file written to $retroWinRoot\autoconfigs\$($controllerName).cfg")
         }
 
     }

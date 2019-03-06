@@ -173,9 +173,9 @@ Function Out-IniFile {
         Saves the content of the $IniVar Hashtable to the INI File c:\myinifile.ini and saves the file into $file  
   
     .Example  
-        $Category1 = @{“Key1”=”Value1”;”Key2”=”Value2”}  
-    $Category2 = @{“Key1”=”Value1”;”Key2”=”Value2”}  
-    $NewINIContent = @{“Category1”=$Category1;”Category2”=$Category2}  
+        $Category1 = @{ï¿½Key1ï¿½=ï¿½Value1ï¿½;ï¿½Key2ï¿½=ï¿½Value2ï¿½}  
+    $Category2 = @{ï¿½Key1ï¿½=ï¿½Value1ï¿½;ï¿½Key2ï¿½=ï¿½Value2ï¿½}  
+    $NewINIContent = @{ï¿½Category1ï¿½=$Category1;ï¿½Category2ï¿½=$Category2}  
     Out-IniFile -InputObject $NewINIContent -FilePath "C:\MyNewFile.INI"  
         -----------  
         Description  
@@ -187,14 +187,16 @@ Function Out-IniFile {
     [CmdletBinding()]  
     Param(  
         [switch]$Append,  
+
+        [switch]$SpacesAroundEquals,
           
-        [ValidateSet("Unicode","UTF7","UTF8","UTF32","ASCII","BigEndianUnicode","Default","OEM")]  
+        #[ValidateSet("Unicode","UTF7","UTF8","UTF8-With-BOM","UTF8NoBOM","UTF32","ASCII","BigEndianUnicode","Default","OEM")]  
         [Parameter()]  
         [string]$Encoding = "Unicode",  
  
           
         [ValidateNotNullOrEmpty()]  
-        [ValidatePattern('^([a-zA-Z]\:)?.+\.[ini|cfg]$')]  # need to support cfg files too
+        [ValidateScript({(Test-Path $_) -and (((Get-Item $_).Extension -eq ".ini") -or ((Get-Item $_).Extension -eq ".cfg")) })]  # also support cfg files
         [Parameter(Mandatory=$True)]  
         [string]$FilePath,  
           
@@ -213,35 +215,40 @@ Function Out-IniFile {
     Process  
     {  
         Write-Verbose "$($MyInvocation.MyCommand.Name):: Writing to file: $Filepath"  
+
+        $equals = "="
+
+        if ($SpacesAroundEquals)
+        {
+            $equals = " = "
+        }
           
         if ($append) {$outfile = Get-Item $FilePath}  
         else {$outFile = New-Item -ItemType file -Path $Filepath -Force:$Force}  
         if (!($outFile)) {Throw "Could not create File"}  
+        $(
         foreach ($i in $InputObject.keys)  
         {  
             if (!($($InputObject[$i].GetType().Name) -eq "Hashtable"))  
             {  
                 #No Sections  
-                Write-Verbose "$($MyInvocation.MyCommand.Name):: Writing key: $i"  
-                Add-Content -Path $outFile -Value "$i=$($InputObject[$i])" -Encoding $Encoding  
+                "$i$equals$($InputObject[$i])"
             } else {  
                 #Sections  
-                Write-Verbose "$($MyInvocation.MyCommand.Name):: Writing Section: [$i]"  
-                Add-Content -Path $outFile -Value "[$i]" -Encoding $Encoding  
-                Foreach ($j in $($InputObject[$i].keys | Sort-Object))  
+                "[$i]"
+                Foreach ($j in $($InputObject[$i].keys))  
                 {  
                     if ($j -match "^Comment[\d]+") {  
-                        Write-Verbose "$($MyInvocation.MyCommand.Name):: Writing comment: $j"  
-                        Add-Content -Path $outFile -Value "$($InputObject[$i][$j])" -Encoding $Encoding  
+                       "$($InputObject[$i][$j])"
                     } else {  
-                        Write-Verbose "$($MyInvocation.MyCommand.Name):: Writing key: $j"  
-                        Add-Content -Path $outFile -Value "$j=$($InputObject[$i][$j])" -Encoding $Encoding  
+                        "$j$equals$($InputObject[$i][$j])"
                     }  
                       
                 }  
-                Add-Content -Path $outFile -Value "" -Encoding $Encoding  
+                ""
             }  
-        }  
+        }) | Out-File -FilePath $outFile -Encoding $Encoding
+
         Write-Verbose "$($MyInvocation.MyCommand.Name):: Finished Writing to file: $path"  
         if ($PassThru) {Return $outFile}  
     }  
