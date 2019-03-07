@@ -14,7 +14,7 @@
 *.log
 /EmulationLaunchers/fs-uae/*.zip
 /EmulationLaunchers/fs-uae/*.xml
-/EmulationLaunchers/fs-uae/**/*
+/EmulationLaunchers/fs-uae/*/*
 /config/input.xml
 config/input.xml
 /savedata
