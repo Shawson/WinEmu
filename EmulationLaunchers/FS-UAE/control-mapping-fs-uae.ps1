@@ -8,7 +8,7 @@ function GetControllerName([string]$deviceName, [string]$driverName, [int]$contr
     switch ($type) 
     { 
         "button" { return GetButton -name $name -id $id -value $value -controllerIndex $controllerIndex } 
-        "axis" { return GetAxis -name $name -id $id -value $value } 
+        "axis" { return "" } #return GetAxis -name $name -id $id -value $value } 
         "hat" { return GetHat -name $name -id $id -value $value } 
     }
 }
@@ -25,16 +25,16 @@ function GetButton([String]$name, [String]$id, [String]$value, [int]$controllerI
         "hotkeyenable" { $mappedName = "action_menu" }
     }
 
-    return "_button_$($id) = $($mappedName)"
+    return "_button_$($id)=$($mappedName)"
 }
 
 function GetHat([String]$name, [String]$id, [String]$value) {
     
     switch($name){
-        "down" { $mappedName = "input_down_btn" }
-        "up" { $mappedName = "input_up_btn" } 
-        "left" { $mappedName = "input_left_btn" }
-        "right" { $mappedName = "input_right_btn" }
+        "down" { $mappedName = "action_joy_$($controllerIndex + 1)_down" }
+        "up" { $mappedName = "action_joy_$($controllerIndex + 1)_up" } 
+        "left" { $mappedName = "action_joy_$($controllerIndex + 1)_left" }
+        "right" { $mappedName = "action_joy_$($controllerIndex + 1)_right" }
     }
 
     switch($value) {
@@ -44,7 +44,7 @@ function GetHat([String]$name, [String]$id, [String]$value) {
         "8" { $hatValue = "left" }
     }
 
-    return "$($mappedName) = ""h$($id)$($hatValue)"""
+    return "_hat_$($id)_$($hatValue)=$($mappedName)"
 }
 
 function GetAxis([String]$name, [String]$id, [String]$value) {
