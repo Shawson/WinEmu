@@ -20,7 +20,8 @@
 	  {"file":"mupen64plus_libretro.dll.zip","url":"http://buildbot.libretro.com/nightly/windows/x86_64/latest/mupen64plus_libretro.dll.zip"},
 	  {"file":"nestopia_libretro.dll.zip","url":"http://buildbot.libretro.com/nightly/windows/x86_64/latest/nestopia_libretro.dll.zip"},
 	  {"file":"mednafen_psx_libretro.dll.zip","url":"http://buildbot.libretro.com/nightly/windows/x86_64/latest/mednafen_psx_libretro.dll.zip"},
-	  {"file":"bsnes_balanced_libretro.dll.zip","url":"http://buildbot.libretro.com/nightly/windows/x86_64/latest/bsnes_balanced_libretro.dll.zip"}
+	  {"file":"bsnes_balanced_libretro.dll.zip","url":"http://buildbot.libretro.com/nightly/windows/x86_64/latest/bsnes_balanced_libretro.dll.zip"},
+	  {"file":"mednafen_psx_hw_libretro.dll.zip","url":"http://buildbot.libretro.com/nightly/windows/x86_64/latest/mednafen_psx_hw_libretro.dll.zip"}
 	],
 	"releases": [
 		{"file":"EmulationStation-Win32.zip", "repo":"jrassa/emulationstation"},

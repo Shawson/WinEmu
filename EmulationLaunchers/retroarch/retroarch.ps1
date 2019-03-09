@@ -98,13 +98,13 @@ Try {
 
     $commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + "' '" + $($romPath) + "'"
 
-    $commandString += " | Out-Null"
+    $commandString += " --verbose >> $retroWinRoot\last-run.log 2>&1 | Out-String"
 
     log($commandString)
 
-    $emuout = Invoke-Expression $commandString 
+    $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 
-    log($emuout)
+    Invoke-Expression $commandString
 
 }
 Catch {

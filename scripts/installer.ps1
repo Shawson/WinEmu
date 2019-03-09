@@ -187,6 +187,7 @@ $retroarchCfg["No-Section"]["input_player1_analog_dpad_mode"] = """1"""
 $retroarchCfg["No-Section"]["input_player2_analog_dpad_mode"] = """1"""
 $retroarchCfg["No-Section"]["joypad_autoconfig_dir"] = """$retroWinRoot\autoconfigs"""
 $retroarchCfg["No-Section"]["savefile_directory"] = """$retroWinRoot\savedata\retroarch\saves"""
+$retroarchCfg["No-Section"]["system_directory"] = """$retroWinRoot\bios"""
 
 Out-IniFile $retroarchCfg["No-Section"] -FilePath $retroarchConfigPath -Encoding "UTF8" -Force -SpacesAroundEquals
 $utf8NoBomEncoding = New-Object System.Text.UTF8Encoding($False) 

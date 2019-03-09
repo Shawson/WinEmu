@@ -171,7 +171,7 @@
             </extensionOverrides>
         </emulator>
     </system>
-    <system name="psx" displayName="Sony PlayStation">
+    <system name="psx" defaultEmulator="mednafen_psx_libretro" displayName="Sony PlayStation">
         <emulator name="mednafen_psx_libretro" displayName="Retroarch mednafen psx" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName mednafen_psx_libretro.dll' -nogui -loadbin -romPath %ROM%">
             <extensionOverrides>
                 <extension>cue</extension>
