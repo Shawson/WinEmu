@@ -48,13 +48,14 @@ $retroWinRoot = (Get-Item $scriptPath).Parent.FullName
 
         # check for any file extension overrides
 
-        $extensionOverride = $systemSettings.emulator | where { $_.extensionOverrides | where { $_.extension -eq $romExtension.ToString() }  }
+        $extensionOverride = $systemSettings.emulator | where { $_.extensionOverrides | where { $_.extension -eq $romExtension.ToString() }  } | Select -First 1
 
         if ($null -ne $extensionOverride) {
             $emulator = $extensionOverride
             log  "Selected emulator override based on file extension : " + $emulator.name
         }
 
+        <#
         $showMenu = $false
         #$showMenu = TimedPrompt "Launching $($romName) with $($emulator.displayname) - Press any key to change" 1
 
@@ -62,6 +63,9 @@ $retroWinRoot = (Get-Item $scriptPath).Parent.FullName
         {
             log ("Opening selection menu")
         }
+        #>
+
+        $romPath = """$(Split-Path -Path $romPath.substring(1))\$($romName.replace("'", "''")).$romExtension"""
 
         $commandLine = "& $($scriptPath)\..\$($emulator.path.replace("%ROM%", $romPath)) | Out-Null"
 

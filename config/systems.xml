@@ -172,11 +172,14 @@
         </emulator>
     </system>
     <system name="psx" defaultEmulator="mednafen_psx_libretro" displayName="Sony PlayStation">
-        <emulator name="mednafen_psx_libretro" displayName="Retroarch mednafen psx" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName mednafen_psx_libretro.dll' -nogui -loadbin -romPath %ROM%">
+        <emulator name="mednafen_psx_libretro" displayName="Retroarch mednafen psx" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName mednafen_psx_libretro.dll -romPath %ROM%">
             <extensionOverrides>
                 <extension>cue</extension>
-                <extension>iso</extension>
+                <extension>toc</extension>
+                <extension>m3u</extension>
+                <extension>ccd</extension>
                 <extension>pbp</extension>
+                <extension>chd</extension>
             </extensionOverrides>
         </emulator>
         <emulator name="ePSXe" displayName="ePSXe" path="Emulators\epsxe\ePSXe.exe -bios bios\SCPH1001.BIN -nogui -loadbin %ROM%">

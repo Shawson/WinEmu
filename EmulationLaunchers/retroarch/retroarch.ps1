@@ -1,7 +1,8 @@
 [cmdletbinding()]
 param (
     [Parameter(Mandatory=$true)][string]$romPath,
-    [Parameter(Mandatory=$true)][string]$coreName
+    [Parameter(Mandatory=$true)][string]$coreName,
+    [Parameter(Mandatory=$false)][string]$coreOptions
 )
 
 $scriptPath = Split-Path -Path $MyInvocation.MyCommand.Path 
@@ -96,7 +97,7 @@ Try {
 
     }
 
-    $commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + "' '" + $($romPath) + "'"
+    $commandString = "emu -L 'Emulators\retroarch\cores\" + $($coreName) + "' '" + $($romPath) + "' $coreOptions"
 
     $commandString += " --verbose >> $retroWinRoot\last-run.log 2>&1 | Out-String"
 
