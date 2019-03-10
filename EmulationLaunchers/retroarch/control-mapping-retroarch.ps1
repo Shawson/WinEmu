@@ -18,13 +18,13 @@ function GetControllerName([string]$deviceName, [string]$driverName, [int]$contr
 {
     switch ($type) 
     { 
-        "button" { return GetButton -name $name -id $id -value $value } 
+        "button" { return GetButton -name $name -id $id } 
         "axis" { return GetAxis -name $name -id $id -value $value } 
         "hat" { return GetHat -name $name -id $id -value $value } 
     }
 }
 
-function GetButton([String]$name, [String]$id, [String]$value) {
+function GetButton([String]$name, [String]$id) {
 
     $mappedName = "unknown"
 
@@ -86,6 +86,7 @@ function GetAxis([String]$name, [String]$id, [String]$value) {
     switch($value)
     {
         "+1" { $sign = "+" }
+        "1" { $sign = "+" }
         "-1" { $sign = "-" }
     }
 

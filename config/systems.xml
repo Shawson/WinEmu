@@ -232,6 +232,13 @@
             </extensionOverrides>
         </emulator>
     </system>
+    <system name="wii" defaultEmulator="dolphin_libretro" displayName="Nintendo Wii">
+        <emulator name="dolphin_libretro" displayName="Retroarch dolphin_libretro" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName dolphin_libretro.dll -romPath %ROM%">
+            <extensionOverrides>
+                <extension>iso</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
     <system name="zxspectrum" displayName="Sinclair ZX Spectrum">
         <emulator name="fuse_libretro" displayName="Retroarch Fuse" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName fuse_libretro.dll -romPath %ROM%">
             <extensionOverrides>

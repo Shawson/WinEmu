@@ -26,6 +26,7 @@
 	"releases": [
 		{"file":"EmulationStation-Win32.zip", "repo":"jrassa/emulationstation"},
 		{"file":"scraper_windows_amd64.zip", "repo":"sselph/scraper"},
-		{"file":"ESGamePadDetect.7z", "repo":"Shawson/ESGamePadDetect"}
+		{"file":"ESGamePadDetect.7z", "repo":"Shawson/ESGamePadDetect"},
+		{"file":"recalbox-multi-v2.0.0.tar.xz", "repo":"recalbox/recalbox-themes"}
 	]
 }
