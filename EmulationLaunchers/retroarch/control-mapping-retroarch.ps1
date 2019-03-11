@@ -18,9 +18,9 @@ function GetControllerName([string]$deviceName, [string]$driverName, [int]$contr
 {
     switch ($type) 
     { 
-        "button" { return GetButton -name $name -id $id } 
+        "button" { return "$(GetButton -name $name -id $id)$(GetSpecialButton -name $name -id $id)" } 
         "axis" { return GetAxis -name $name -id $id -value $value } 
-        "hat" { return GetHat -name $name -id $id -value $value } 
+        "hat" { return "$(GetHat -name $name -id $id -value $value)$(GetSpecialHat -name $name -id $id -value $value)" } 
     }
 }
 
@@ -35,7 +35,7 @@ function GetSpecialButton([String]$name, [String]$id) {
         default { return "" }
     }
 
-    return "$($mappedName) = ""$($id)"""
+    return "`n$($mappedName) = ""$($id)"""
 }
 
 function GetButton([String]$name, [String]$id) {
@@ -56,6 +56,24 @@ function GetButton([String]$name, [String]$id) {
     }
 
     return "$($mappedName) = ""$($id)"""
+}
+
+function GetSpecialHat([String]$name, [String]$id, [String]$value) {
+    
+    switch($name){
+        "left" { $mappedName = "input_state_slot_decrease_btn" }
+        "right" { $mappedName = "input_state_slot_increase_btn" }
+        default { return "" }
+    }
+
+    switch($value) {
+        "1" { $hatValue = "up" }
+        "2" { $hatValue = "right" }
+        "4" { $hatValue = "down" }
+        "8" { $hatValue = "left" }
+    }
+
+    return "`n$($mappedName) = ""h$($id)$($hatValue)"""
 }
 
 function GetHat([String]$name, [String]$id, [String]$value) {
