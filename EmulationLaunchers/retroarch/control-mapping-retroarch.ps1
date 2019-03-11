@@ -24,9 +24,21 @@ function GetControllerName([string]$deviceName, [string]$driverName, [int]$contr
     }
 }
 
-function GetButton([String]$name, [String]$id) {
+function GetSpecialButton([String]$name, [String]$id) {
 
-    $mappedName = "unknown"
+    switch($name){
+        "b" { $mappedName = "input_reset_btn" }
+        "x" { $mappedName = "input_menu_toggle_btn" }
+        "leftshoulder" { $mappedName = "input_load_state_btn" }
+        "rightshoulder" { $mappedName = "input_save_state_btn" }
+        "start" { $mappedName = "input_exit_emulator_btn" }
+        default { return "" }
+    }
+
+    return "$($mappedName) = ""$($id)"""
+}
+
+function GetButton([String]$name, [String]$id) {
 
     switch($name){
         "a" { $mappedName = "input_a_btn" }
@@ -39,7 +51,8 @@ function GetButton([String]$name, [String]$id) {
         "rightthumb" { $mappedName = "input_r3_btn" }
         "select" { $mappedName = "input_select_btn" }
         "start" { $mappedName = "input_start_btn" }
-        "hotkeyenable" { $mappedName = "input_menu_toggle_btn" }
+        "hotkeyenable" { $mappedName = "input_enable_hotkey_btn" }
+        default { return "" }
     }
 
     return "$($mappedName) = ""$($id)"""
