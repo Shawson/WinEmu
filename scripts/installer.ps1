@@ -444,12 +444,14 @@ Write-Output $dolphinConfigFileContent  > $dolphinConfigFile
 # https://www.youtube.com/watch?v=fY89H8fLFSc
 $path = 'HKCU:\SOFTWARE\epsxe\config'
 
-New-Item -Path $path -Force | Out-Null
+if(!(Test-Path -Path $path )){
+    New-Item -Path $path -Force | Out-Null
+}
 
 Set-ItemProperty -Path $path -Name 'CPUOverclocking' -Value '10'
 
 # Add in a game art scraper
-$scraperZip = "$installersFolderscraper_windows_amd64*.zip"
+$scraperZip = "$($installersFolder)scraper_windows_amd64*.zip"
 Expand-Archive -Path $scraperZip -Destination $romPath
 
 $wshshell = New-Object -ComObject WScript.Shell
