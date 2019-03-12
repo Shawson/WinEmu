@@ -54,6 +54,15 @@
             </extensionOverrides>
         </emulator>
     </system>
+    <system name="dreamcast" defaultEmulator="reicast_libretro" displayName="Sega Dreamcast" esPlatform="dreamcast">
+        <emulator name="reicast_libretro" displayName="Retroarch reicast" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName reicast_libretro.dll -romPath %ROM%">
+            <extensionOverrides>
+                <extension>gdi</extension>
+                <extension>cdi</extension>
+                <extension>chd</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
     <system name="fba" defaultEmulator="fbalpha2012_libretro" displayName="Final Burn Alpha" esPlatform="arcade">
         <emulator name="fbalpha2012_libretro" displayName="Retroarch fbalpha2012" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName fbalpha2012_libretro.dll -romPath %ROM%">
             <extensionOverrides>
