@@ -161,8 +161,8 @@ Expand-Archive -Path $ps2Emulator -Destination $ps2ExtractionPath
 Rename-Item -Path "$($retroWinRoot)\emulators\PCSX2 1.4.0" -NewName "$($retroWinRoot)\emulators\pcsx2"
 
 # Start Retroarch and generate a config
-$retroarchExecutable = "$retroArchPathretroarch.exe"
-$retroarchConfigPath = "$retroArchPathretroarch.cfg"
+$retroarchExecutable = "$($retroArchPath)retroarch.exe"
+$retroarchConfigPath = "$($retroArchPath)retroarch.cfg"
 
 & $retroarchExecutable
 
