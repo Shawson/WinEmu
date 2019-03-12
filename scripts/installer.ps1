@@ -115,19 +115,19 @@ Stop-Process -Name "emulationstation"
 "Stopped Emulation Station"
 
 # Retroarch Setup
-$retroArchPath = $retroWinRoot + "\emulators\retroarch\"
+$retroArchPath = "$retroWinRoot\emulators\retroarch\"
 New-Item -ItemType Directory -Force -Path $retroArchPath
 
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves"
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves\User\Wii"
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves\User\GC"
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\retroarch\saves\User\Config"
+New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves"
+New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\Wii"
+New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\GC"
+New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\Config"
 
-$retroArchBinary = $installersFolder + "RetroArch.7z"
+$retroArchBinary = "$($installersFolder)RetroArch.7z"
 Expand-Archive -Path $retroArchBinary -Destination $retroArchPath
 
 # extract and copy cores
-$coresPath = $retroArchPath + "cores"
+$coresPath = "$($retroArchPath)cores"
 
 Get-ChildItem $installersFolder | where { $_.Name.EndsWith("_libretro.dll.zip") } | ForEach-Object {
 
@@ -135,34 +135,34 @@ Get-ChildItem $installersFolder | where { $_.Name.EndsWith("_libretro.dll.zip") 
 }
 
 # fs-uae Setup
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\fs-uae\"
+New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\fs-uae\"
 
-$fsuaeEmulator = $installersFolder + "fs-uae_2.8.3_windows_x86.zip"
-$fsuaeEmulatorPath = $retroWinRoot + "\emulators\fs-uae\"
+$fsuaeEmulator = "$($installersFolder)fs-uae_2.8.3_windows_x86.zip"
+$fsuaeEmulatorPath = "$retroWinRoot\emulators\fs-uae\"
 Expand-Archive -Path $fsuaeEmulator -Destination $fsuaeEmulatorPath
 
 # game pad detect
-$esGamePadDetect = $installersFolder + "ESGamePadDetect.7z"
-$esGamePadDetecPath = $retroWinRoot + "\tools\ESGamePadDetect"
+$esGamePadDetect = "$($installersFolder)ESGamePadDetect.7z"
+$esGamePadDetecPath = "$retroWinRoot\tools\ESGamePadDetect"
 Expand-Archive -Path $esGamePadDetect -Destination $esGamePadDetecPath
 
 # PSX Setup
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\epsxe\"
-$psxEmulator = $installersFolder + "ePSXe205.zip"
-$psxEmulatorPath = $retroWinRoot + "\emulators\epsxe\"
+New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\epsxe\"
+$psxEmulator = "$($installersFolder)ePSXe205.zip"
+$psxEmulatorPath = "$retroWinRoot\emulators\epsxe\"
 New-Item -ItemType Directory -Force -Path $psxEmulatorPath
 Expand-Archive -Path $psxEmulator -Destination $psxEmulatorPath
 
 # PS2 Setup
-New-Item -ItemType Directory -Force -Path $retroWinRoot + "\savedata\pcsx2\"
-$ps2Emulator = $installersFolder + "pcsx2-1.4.0-binaries.7z"
-$ps2ExtractionPath = $retroWinRoot + "\emulators\"
+New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\pcsx2\"
+$ps2Emulator = "$($installersFolder)pcsx2-1.4.0-binaries.7z"
+$ps2ExtractionPath = "$retroWinRoot\emulators\"
 Expand-Archive -Path $ps2Emulator -Destination $ps2ExtractionPath
 Rename-Item -Path "$($retroWinRoot)\emulators\PCSX2 1.4.0" -NewName "$($retroWinRoot)\emulators\pcsx2"
 
 # Start Retroarch and generate a config
-$retroarchExecutable = $retroArchPath + "retroarch.exe"
-$retroarchConfigPath = $retroArchPath + "retroarch.cfg"
+$retroarchExecutable = "$retroArchPathretroarch.exe"
+$retroarchConfigPath = "$retroArchPathretroarch.cfg"
 
 & $retroarchExecutable
 
@@ -194,8 +194,8 @@ $utf8NoBomEncoding = New-Object System.Text.UTF8Encoding($False)
 [System.IO.File]::WriteAllLines( $retroarchConfigPath, (Get-Content  $retroarchConfigPath), $utf8NoBomEncoding) 
 
 # Setup Rom & BIOS Folders
-$romPath =  $retroWinRoot+"\roms"
-$biosPath = $retroWinRoot+"\bios"
+$romPath =  "$retroWinRoot\roms"
+$biosPath = "$retroWinRoot\bios"
 $systemsXml = ( Select-Xml -Path "$($scriptDir)\..\config\systems.xml" -XPath / ).Node
 $systemsXml.systems.system | ForEach-Object { 
 
@@ -205,7 +205,7 @@ $systemsXml.systems.system | ForEach-Object {
 
 # build a new es_systems file
  
-$esConfigFile = $retroWinRoot+"\.emulationstation\es_systems.cfg"
+$esConfigFile = "$retroWinRoot\.emulationstation\es_systems.cfg"
 
 [xml]$newConfig = New-Object System.Xml.XmlDocument
 $root = $newConfig.CreateNode("element","systemList",$null)
@@ -220,7 +220,7 @@ $systemsXml.systems.system | ForEach-Object {
     $nName.InnerText = $_.name
     $nSystem.AppendChild($nName)
     $nPath = $newConfig.CreateNode("element","path",$null)
-    $nPath.InnerText = "~/roms/" + $_.name
+    $nPath.InnerText = "~/roms/$($_.name)"
     $nSystem.AppendChild($nPath)
     $nExtension = $newConfig.CreateNode("element","extension",$null)
     $nExtension.InnerText = "." + [String]::Join(" .", $_.emulator.extensionOverrides.extension) + " ." + [String]::Join(" .", $_.emulator.extensionOverrides.extension.ToUpper())
@@ -247,10 +247,10 @@ $newConfig.AppendChild($root)
 $newConfig.save($esConfigFile)
 
 # Copy over default es settings file
-$esConfigFile = $retroWinRoot+"\.emulationstation\es_settings.cfg"
+$esConfigFile = "$retroWinRoot\.emulationstation\es_settings.cfg"
 Copy-Item -Path "$retroWinRoot\scripts\es_settings.cfg" -Destination $esConfigFile
 
-$requiredTmpFolder = $retroWinRoot+"\.emulationstation\tmp\"
+$requiredTmpFolder = "$retroWinRoot\.emulationstation\tmp\"
 New-Item -ItemType Directory -Force -Path $requiredTmpFolder
 
 # 
@@ -449,12 +449,12 @@ New-Item -Path $path -Force | Out-Null
 Set-ItemProperty -Path $path -Name 'CPUOverclocking' -Value '10'
 
 # Add in a game art scraper
-$scraperZip = $installersFolder + "scraper_windows_amd64*.zip"
+$scraperZip = "$installersFolderscraper_windows_amd64*.zip"
 Expand-Archive -Path $scraperZip -Destination $romPath
 
 $wshshell = New-Object -ComObject WScript.Shell
 $desktop = [System.Environment]::GetFolderPath('Desktop')
-$lnk = $wshshell.CreateShortcut($desktop+"\RetroWin.lnk")
+$lnk = $wshshell.CreateShortcut("$desktop\RetroWin.lnk")
 $lnk.TargetPath = "powershell"
 $lnk.Arguments = " -ExecutionPolicy ByPass -File ""$scriptDir\start-es.ps1"""
 $lnk.WorkingDirectory = "$scriptDir\"
