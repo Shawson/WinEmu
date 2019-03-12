@@ -94,6 +94,8 @@ $action = {
             MakeInputNode $configFile $existingControllerDef "button" "leftthumb"
             MakeInputNode $configFile $existingControllerDef "button" "rightthumb"
             MakeInputNode $configFile $existingControllerDef "button" "hotkeyenable"
+            MakeInputNode $configFile $existingControllerDef "button" "leftshoulder"
+            MakeInputNode $configFile $existingControllerDef "button" "rightshoulder"
             MakeInputNode $configFile $existingControllerDef "hat" "up"
             MakeInputNode $configFile $existingControllerDef "hat" "down"
             MakeInputNode $configFile $existingControllerDef "hat" "left"
