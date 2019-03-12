@@ -5,7 +5,20 @@ param (
 
 # get paths
 $scriptPath = Split-Path -Path $MyInvocation.MyCommand.Path 
+$retroWinRoot = (Get-Item $scriptPath).Parent.Parent.FullName
 $whdLoadDbXmlPath = "$($scriptPath)\whdload_db.xml"
+
+function log([string]$text) {
+    Add-Content "$retroWinRoot\last-run.log" "$([DateTime]::Now.ToString()) [fs-uae] $($text)"
+}
+
+Try {
+    . ("$scriptPath\control-mapping-fs-uae.ps1")
+}
+Catch {
+    log("Could not find $scriptPath\control-mapping-retroarch.ps1")
+    Return
+}
 
 # check for dependencies and setup aliases
 if ((test-path "${env:ProgramFiles(x86)}\7-Zip\7z.exe")) 
@@ -19,7 +32,7 @@ else {
         
     } 
     else {
-        throw "7Zip not found at ${env:ProgramFiles(x86)}\7-Zip\7z.exe or $env:ProgramW6432\7-Zip\7z.exe"
+        log("7Zip not found at ${env:ProgramFiles(x86)}\7-Zip\7z.exe or $env:ProgramW6432\7-Zip\7z.exe")
     }
 }
  
@@ -292,7 +305,7 @@ if ($null -ne $whdSettings) {
 
 # launch winuae and wait for it to finish (https://www.vware.at/winuaehelp/CommandLineParameters.html)
 
-$hardwareSettings
+log($hardwareSettings)
 
 $commandString = "emu -f --amiga_model=" + $($amiga_model) + " --kickstart_file=""$($scriptPath)\save-data\Kickstarts\"+$($kickFile)+""" --hard_drive_0=""$($scriptPath)\boot-data"" --hard_drive_1=""$($scriptPath)\game-data"" --hard_drive_2=""$($scriptPath)\save-data"" "
 
@@ -306,9 +319,13 @@ if (![String]::IsNullOrWhiteSpace($z3mem_size)) { $commandString += " --zorro_ii
 if (![String]::IsNullOrWhiteSpace($jit)) { $commandString += " --jit_compiler="+$($jit) }
 if (![String]::IsNullOrWhiteSpace($ntsc)) { $commandString += " --ntsc_mode="+$($ntsc) }
 
-$commandString += " --floppy_drive_volume=0 | Out-Null" #--fullscreen=1 | Out-Null"
 
-$commandString
+
+$commandString += " --floppy_drive_volume=0 >> $retroWinRoot\last-run.log 2>&1 | Out-String" #--fullscreen=1 | Out-Null"
+
+log($commandString)
+
+$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 
 Invoke-Expression $commandString 
 

@@ -18,15 +18,27 @@ function GetControllerName([string]$deviceName, [string]$driverName, [int]$contr
 {
     switch ($type) 
     { 
-        "button" { return GetButton -name $name -id $id -value $value } 
+        "button" { return "$(GetButton -name $name -id $id)$(GetSpecialButton -name $name -id $id)" } 
         "axis" { return GetAxis -name $name -id $id -value $value } 
-        "hat" { return GetHat -name $name -id $id -value $value } 
+        "hat" { return "$(GetHat -name $name -id $id -value $value)$(GetSpecialHat -name $name -id $id -value $value)" } 
     }
 }
 
-function GetButton([String]$name, [String]$id, [String]$value) {
+function GetSpecialButton([String]$name, [String]$id) {
 
-    $mappedName = "unknown"
+    switch($name){
+        "b" { $mappedName = "input_reset_btn" }
+        "x" { $mappedName = "input_menu_toggle_btn" }
+        "leftshoulder" { $mappedName = "input_load_state_btn" }
+        "rightshoulder" { $mappedName = "input_save_state_btn" }
+        "start" { $mappedName = "input_exit_emulator_btn" }
+        default { return "" }
+    }
+
+    return "`n$($mappedName) = ""$($id)"""
+}
+
+function GetButton([String]$name, [String]$id) {
 
     switch($name){
         "a" { $mappedName = "input_a_btn" }
@@ -39,10 +51,29 @@ function GetButton([String]$name, [String]$id, [String]$value) {
         "rightthumb" { $mappedName = "input_r3_btn" }
         "select" { $mappedName = "input_select_btn" }
         "start" { $mappedName = "input_start_btn" }
-        "hotkeyenable" { $mappedName = "input_menu_toggle_btn" }
+        "hotkeyenable" { $mappedName = "input_enable_hotkey_btn" }
+        default { return "" }
     }
 
     return "$($mappedName) = ""$($id)"""
+}
+
+function GetSpecialHat([String]$name, [String]$id, [String]$value) {
+    
+    switch($name){
+        "left" { $mappedName = "input_state_slot_decrease_btn" }
+        "right" { $mappedName = "input_state_slot_increase_btn" }
+        default { return "" }
+    }
+
+    switch($value) {
+        "1" { $hatValue = "up" }
+        "2" { $hatValue = "right" }
+        "4" { $hatValue = "down" }
+        "8" { $hatValue = "left" }
+    }
+
+    return "`n$($mappedName) = ""h$($id)$($hatValue)"""
 }
 
 function GetHat([String]$name, [String]$id, [String]$value) {
@@ -86,6 +117,7 @@ function GetAxis([String]$name, [String]$id, [String]$value) {
     switch($value)
     {
         "+1" { $sign = "+" }
+        "1" { $sign = "+" }
         "-1" { $sign = "-" }
     }
 

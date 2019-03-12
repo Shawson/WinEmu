@@ -180,12 +180,15 @@
             </extensionOverrides>
         </emulator>
     </system>
-    <system name="psx" displayName="Sony PlayStation">
-        <emulator name="mednafen_psx_libretro" displayName="Retroarch mednafen psx" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName mednafen_psx_libretro.dll' -nogui -loadbin -romPath %ROM%">
+    <system name="psx" defaultEmulator="mednafen_psx_libretro" displayName="Sony PlayStation">
+        <emulator name="mednafen_psx_libretro" displayName="Retroarch mednafen psx" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName mednafen_psx_libretro.dll -romPath %ROM%">
             <extensionOverrides>
                 <extension>cue</extension>
-                <extension>iso</extension>
+                <extension>toc</extension>
+                <extension>m3u</extension>
+                <extension>ccd</extension>
                 <extension>pbp</extension>
+                <extension>chd</extension>
             </extensionOverrides>
         </emulator>
         <emulator name="ePSXe" displayName="ePSXe" path="Emulators\epsxe\ePSXe.exe -bios bios\SCPH1001.BIN -nogui -loadbin %ROM%">
@@ -235,6 +238,13 @@
                 <extension>sfc</extension>
                 <extension>fig</extension>
                 <extension>swc</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>
+    <system name="wii" defaultEmulator="dolphin_libretro" displayName="Nintendo Wii">
+        <emulator name="dolphin_libretro" displayName="Retroarch dolphin_libretro" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName dolphin_libretro.dll -romPath %ROM%">
+            <extensionOverrides>
+                <extension>iso</extension>
             </extensionOverrides>
         </emulator>
     </system>
