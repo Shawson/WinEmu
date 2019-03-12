@@ -137,6 +137,7 @@ Get-ChildItem $installersFolder | where { $_.Name.EndsWith("_libretro.dll.zip") 
 # fs-uae Setup
 New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\fs-uae\"
 
+
 $fsuaeEmulator = "$($installersFolder)fs-uae_2.8.3_windows_x86.zip"
 $fsuaeEmulatorPath = "$retroWinRoot\emulators\fs-uae\"
 Expand-Archive -Path $fsuaeEmulator -Destination $fsuaeEmulatorPath
@@ -150,6 +151,7 @@ Expand-Archive -Path $esGamePadDetect -Destination $esGamePadDetecPath
 New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\epsxe\"
 $psxEmulator = "$($installersFolder)ePSXe205.zip"
 $psxEmulatorPath = "$retroWinRoot\emulators\epsxe\"
+
 New-Item -ItemType Directory -Force -Path $psxEmulatorPath
 Expand-Archive -Path $psxEmulator -Destination $psxEmulatorPath
 
@@ -157,8 +159,9 @@ Expand-Archive -Path $psxEmulator -Destination $psxEmulatorPath
 New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\pcsx2\"
 $ps2Emulator = "$($installersFolder)pcsx2-1.4.0-binaries.7z"
 $ps2ExtractionPath = "$retroWinRoot\emulators\"
+
 Expand-Archive -Path $ps2Emulator -Destination $ps2ExtractionPath
-Rename-Item -Path "$($retroWinRoot)\emulators\PCSX2 1.4.0" -NewName "$($retroWinRoot)\emulators\pcsx2"
+Rename-Item -Path "$($retroWinRoot)\emulators\PCSX2 1.4.0" -NewName "$retroWinRoot\emulators\pcsx2"
 
 # Start Retroarch and generate a config
 $retroarchExecutable = "$($retroArchPath)retroarch.exe"
