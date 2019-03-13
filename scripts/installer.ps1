@@ -44,7 +44,9 @@ choco install vcredist2015 -y
 # download everything in the manifest
 
 $installersFolder = "$retroWinRoot\installers\"
-New-Item -ItemType Directory -Force -Path $installersFolder
+if(!(Test-Path -Path $installersFolder )){
+    New-Item -ItemType Directory -Force -Path $installersFolder
+}
 
 $manifest = Get-Content "$scriptDir\manifest.json" | ConvertFrom-Json
 
@@ -87,7 +89,10 @@ $manifest | Select-Object -expand releases | ForEach-Object {
 
 # extract EmulationStation
 $esPath = "$retroWinRoot\emulationstation\"
-New-Item -ItemType Directory -Force -Path $esPath
+
+if(!(Test-Path -Path $esPath )){
+    New-Item -ItemType Directory -Force -Path $esPath
+}
 
 $esArchive = "$($installersFolder)EmulationStation-Win32-continuous-master.zip"
 Expand-Archive -Path $esArchive -Destination $esPath
@@ -116,12 +121,22 @@ Stop-Process -Name "emulationstation"
 
 # Retroarch Setup
 $retroArchPath = "$retroWinRoot\emulators\retroarch\"
-New-Item -ItemType Directory -Force -Path $retroArchPath
+if(!(Test-Path -Path $retroArchPath )){
+    New-Item -ItemType Directory -Force -Path $retroArchPath
+}
 
-New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves"
-New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\Wii"
-New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\GC"
-New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\Config"
+if(!(Test-Path -Path "$retroWinRoot\savedata\retroarch\saves" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves"
+}
+if(!(Test-Path -Path "$retroWinRoot\savedata\retroarch\saves\User\Wii" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\Wii"
+}
+if(!(Test-Path -Path "$retroWinRoot\savedata\retroarch\saves\User\GC" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\GC"
+}
+if(!(Test-Path -Path "$retroWinRoot\savedata\retroarch\saves\User\Config" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves\User\Config"
+}
 
 $retroArchBinary = "$($installersFolder)RetroArch.7z"
 Expand-Archive -Path $retroArchBinary -Destination $retroArchPath
@@ -135,8 +150,9 @@ Get-ChildItem $installersFolder | where { $_.Name.EndsWith("_libretro.dll.zip") 
 }
 
 # fs-uae Setup
-New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\fs-uae\"
-
+if(!(Test-Path -Path "$retroWinRoot\savedata\fs-uae\" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\fs-uae\"
+}
 
 $fsuaeEmulator = "$($installersFolder)fs-uae_2.8.3_windows_x86.zip"
 $fsuaeEmulatorPath = "$retroWinRoot\emulators\fs-uae\"
@@ -148,15 +164,21 @@ $esGamePadDetecPath = "$retroWinRoot\tools\ESGamePadDetect"
 Expand-Archive -Path $esGamePadDetect -Destination $esGamePadDetecPath
 
 # PSX Setup
-New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\epsxe\"
+if(!(Test-Path -Path "$retroWinRoot\savedata\epsxe\" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\epsxe\"
+}
 $psxEmulator = "$($installersFolder)ePSXe205.zip"
 $psxEmulatorPath = "$retroWinRoot\emulators\epsxe\"
 
-New-Item -ItemType Directory -Force -Path $psxEmulatorPath
+if(!(Test-Path -Path $psxEmulatorPath )){
+    New-Item -ItemType Directory -Force -Path $psxEmulatorPath
+}
 Expand-Archive -Path $psxEmulator -Destination $psxEmulatorPath
 
 # PS2 Setup
-New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\pcsx2\"
+if(!(Test-Path -Path "$retroWinRoot\savedata\pcsx2\" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\pcsx2\"
+}
 $ps2Emulator = "$($installersFolder)pcsx2-1.4.0-binaries.7z"
 $ps2ExtractionPath = "$retroWinRoot\emulators\"
 
@@ -202,8 +224,12 @@ $biosPath = "$retroWinRoot\bios"
 $systemsXml = ( Select-Xml -Path "$($scriptDir)\..\config\systems.xml" -XPath / ).Node
 $systemsXml.systems.system | ForEach-Object { 
 
-    New-Item -ItemType Directory -Force -Path "$($romPath)\$($_.name)"
-    New-Item -ItemType Directory -Force -Path "$($biosPath)\$($_.name)"
+    if(!(Test-Path -Path "$($romPath)\$($_.name)" )){
+        New-Item -ItemType Directory -Force -Path "$($romPath)\$($_.name)"
+    }
+    if(!(Test-Path -Path "$($biosPath)\$($_.name)" )){
+        New-Item -ItemType Directory -Force -Path "$($biosPath)\$($_.name)"
+    }
 }
 
 # build a new es_systems file
@@ -254,7 +280,9 @@ $esConfigFile = "$retroWinRoot\.emulationstation\es_settings.cfg"
 Copy-Item -Path "$retroWinRoot\scripts\es_settings.cfg" -Destination $esConfigFile
 
 $requiredTmpFolder = "$retroWinRoot\.emulationstation\tmp\"
-New-Item -ItemType Directory -Force -Path $requiredTmpFolder
+if(!(Test-Path -Path $requiredTmpFolder )){
+    New-Item -ItemType Directory -Force -Path $requiredTmpFolder
+}
 
 # 
 # 14. Generate ini file for Dolphin.
@@ -439,7 +467,11 @@ AspectRatio = 1
 Screensaver = 0
 
 "
-New-Item $dolphinConfigFolder -ItemType directory
+
+if(!(Test-Path -Path $dolphinConfigFolder )){
+    New-Item $dolphinConfigFolder -ItemType directory
+}
+
 Write-Output $dolphinConfigFileContent  > $dolphinConfigFile
 
 # Fixing epsxe bug setting the registry
