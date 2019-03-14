@@ -125,6 +125,11 @@ if(!(Test-Path -Path $retroArchPath )){
     New-Item -ItemType Directory -Force -Path $retroArchPath
 }
 
+$autoconfigsFolder = "$retroWinRoot\autoconfigs\"
+if(!(Test-Path -Path $autoconfigsFolder )){
+    New-Item -ItemType Directory -Force -Path $autoconfigsFolder
+}
+
 if(!(Test-Path -Path "$retroWinRoot\savedata\retroarch\saves" )){
     New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\retroarch\saves"
 }
@@ -159,6 +164,9 @@ $fsuaeEmulatorPath = "$retroWinRoot\emulators\fs-uae\"
 Expand-Archive -Path $fsuaeEmulator -Destination $fsuaeEmulatorPath
 
 # game pad detect
+if(!(Test-Path -Path "$retroWinRoot\tools\ESGamePadDetect" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\tools\ESGamePadDetect"
+}
 $esGamePadDetect = "$($installersFolder)ESGamePadDetect.7z"
 $esGamePadDetecPath = "$retroWinRoot\tools\ESGamePadDetect"
 Expand-Archive -Path $esGamePadDetect -Destination $esGamePadDetecPath
