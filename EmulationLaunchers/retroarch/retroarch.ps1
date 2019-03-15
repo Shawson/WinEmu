@@ -94,6 +94,9 @@ Try {
 
             log("config file written to $retroWinRoot\autoconfigs\$($controllerName).cfg")
         }
+        else {
+            log("didn't find a matching controller input.xml for controller - attached controllers are $xml")
+        }
 
     }
 

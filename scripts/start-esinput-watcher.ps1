@@ -41,6 +41,8 @@ $action = {
         $xml = Invoke-Expression "$($retroWinRoot)\tools\ESGamePadDetect\ESGamePadDetect.exe -deviceName=""$($lastInput.deviceName)"" -deviceGUID=""$($lastInput.deviceGUID)""" | Out-String
         $gpdOutput = (Select-Xml -Content $xml -XPath /).Node
 
+        log("attached controllers $xml")
+
         if ($gpdOutput.BaseCommandLineResponseOfGameControllerIdentifiers.ResponseCode -ne 0) {
             log("Failed getting controller input")
             Return
