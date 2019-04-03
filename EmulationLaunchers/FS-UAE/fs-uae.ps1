@@ -321,7 +321,7 @@ if (![String]::IsNullOrWhiteSpace($ntsc)) { $commandString += " --ntsc_mode="+$(
 
 
 
-$commandString += " --floppy_drive_volume=0 >> $retroWinRoot\last-run.log 2>&1 | Out-String" #--fullscreen=1 | Out-Null"
+$commandString += " --floppy_drive_volume=0 --fullscreen=1 >> $retroWinRoot\last-run.log 2>&1 | Out-String" # | Out-Null"
 
 log($commandString)
 

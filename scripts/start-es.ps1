@@ -16,7 +16,7 @@ Try {
     $env:HOME = "$($retroWinRoot)\"
                
     $process = "$($retroWinRoot)\emulationstation\emulationstation.exe"
-    $processArgs = "--windowed --resolution 1024 768"
+    $processArgs = "" #"--windowed --resolution 1024 768"
 
     log("Launching ES with command: $process $processArgs")
 
