@@ -29,5 +29,6 @@
 		{"file":"scraper_windows_amd64.zip", "repo":"sselph/scraper"},
 		{"file":"ESGamePadDetect.7z", "repo":"Shawson/ESGamePadDetect"},
 		{"file":"recalbox-multi-v2.0.0.tar.xz", "repo":"recalbox/recalbox-themes"}
+		{"file":"bezel_project_web_installer_v1.3.exe", "repo":"thebezelproject/BezelProject-Windows"}
 	]
 }
