@@ -20,6 +20,14 @@ Catch {
     Return
 }
 
+Try {
+    . ("$retroWinRoot\scripts\input-detection.ps1")
+}
+Catch {
+    log("Could not find $retroWinRoot\scripts\input-detection.ps1")
+    Return
+}
+
 # check for dependencies and setup aliases
 if ((test-path "${env:ProgramFiles(x86)}\7-Zip\7z.exe")) 
 {
@@ -303,23 +311,46 @@ if ($null -ne $whdSettings) {
 
 }
 
+$Script:InputConfigString = ""
+
+function ProcessController {
+    param (
+        #[Parameter(Mandatory=$true)][string]$romPath
+        [Parameter(Mandatory=$true)][System.Xml.XmlElement]$thisAttachedController,
+        [Parameter(Mandatory=$true)][System.Xml.XmlElement]$thisControllerInputConfig
+    )
+    
+    log("processing controller")
+
+    $controllerName = GetControllerName -deviceName $thisAttachedController.DeviceName -driverName $driverName -controllerIndex $thisAttachedController.ControllerIndex
+    $thisControllerInputConfig.input | ForEach-Object { 
+        $Script:InputConfigString += " --$($controllerName)$(GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value)" 
+    }
+}
+# get controller setup
+
+#https://michlstechblog.info/blog/powershell-function-pointer/
+GetAttachedControllersAndConfigs -processControllerDelegate (Get-Item "function:ProcessController").ScriptBlock
+log("getting attached controllers")
+
+
 # launch winuae and wait for it to finish (https://www.vware.at/winuaehelp/CommandLineParameters.html)
 
 log($hardwareSettings)
 
-$commandString = "emu -f --amiga_model=" + $($amiga_model) + " --kickstart_file=""$($scriptPath)\save-data\Kickstarts\"+$($kickFile)+""" --hard_drive_0=""$($scriptPath)\boot-data"" --hard_drive_1=""$($scriptPath)\game-data"" --hard_drive_2=""$($scriptPath)\save-data"" "
+$commandString = "emu -f --amiga_model=$($amiga_model) --kickstart_file=""$($scriptPath)\save-data\Kickstarts\$($kickFile)"" --hard_drive_0=""$($scriptPath)\boot-data"" --hard_drive_1=""$($scriptPath)\game-data"" --hard_drive_2=""$($scriptPath)\save-data"" "
 
 # --joystick_0_button_0 = action_quit
 
-if (![String]::IsNullOrWhiteSpace($cpu_speed)) { $commandString += " --use_cpu_speed="+$($cpu_speed) }
-if (![String]::IsNullOrWhiteSpace($chipmem_size)) { $commandString += " --chip_memory="+$($chipmem_size) }
-if (![String]::IsNullOrWhiteSpace($cpu_multiplier)) { $commandString += " --uae_cpu_multiplier="+$($cpu_multiplier) }
-if (![String]::IsNullOrWhiteSpace($fastmem_size)) { $commandString += " --fast_memory="+$($fastmem_size) }
-if (![String]::IsNullOrWhiteSpace($z3mem_size)) { $commandString += " --zorro_iii_memory="+$($z3mem_size) }
-if (![String]::IsNullOrWhiteSpace($jit)) { $commandString += " --jit_compiler="+$($jit) }
-if (![String]::IsNullOrWhiteSpace($ntsc)) { $commandString += " --ntsc_mode="+$($ntsc) }
+if (![String]::IsNullOrWhiteSpace($cpu_speed)) { $commandString += " --use_cpu_speed=$($cpu_speed)" }
+if (![String]::IsNullOrWhiteSpace($chipmem_size)) { $commandString += " --chip_memory=$($chipmem_size)" }
+if (![String]::IsNullOrWhiteSpace($cpu_multiplier)) { $commandString += " --uae_cpu_multiplier=$($cpu_multiplier)" }
+if (![String]::IsNullOrWhiteSpace($fastmem_size)) { $commandString += " --fast_memory=$($fastmem_size)" }
+if (![String]::IsNullOrWhiteSpace($z3mem_size)) { $commandString += " --zorro_iii_memory=$($z3mem_size)" }
+if (![String]::IsNullOrWhiteSpace($jit)) { $commandString += " --jit_compiler=$($jit)" }
+if (![String]::IsNullOrWhiteSpace($ntsc)) { $commandString += " --ntsc_mode=$($ntsc)" }
 
-
+$commandString += " $($Script:InputConfigString)"
 
 $commandString += " --floppy_drive_volume=0 --fullscreen=1 >> $retroWinRoot\last-run.log 2>&1 | Out-String" # | Out-Null"
 
