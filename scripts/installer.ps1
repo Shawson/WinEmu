@@ -193,6 +193,16 @@ $ps2ExtractionPath = "$retroWinRoot\emulators\"
 Expand-Archive -Path $ps2Emulator -Destination $ps2ExtractionPath
 Rename-Item -Path "$($retroWinRoot)\emulators\PCSX2 1.4.0" -NewName "$retroWinRoot\emulators\pcsx2"
 
+# Dolphin Standalone
+if(!(Test-Path -Path "$retroWinRoot\savedata\dolphin\" )){
+    New-Item -ItemType Directory -Force -Path "$retroWinRoot\savedata\dolphin\"
+}
+$ps2Emulator = "$($installersFolder)Dolphin-x64.7z"
+$ps2ExtractionPath = "$retroWinRoot\emulators\"
+
+Expand-Archive -Path $ps2Emulator -Destination $ps2ExtractionPath
+Rename-Item -Path "$($retroWinRoot)\emulators\Dolphin-X64" -NewName "$retroWinRoot\emulators\dolphin"
+
 # Start Retroarch and generate a config
 $retroarchExecutable = "$($retroArchPath)retroarch.exe"
 $retroarchConfigPath = "$($retroArchPath)retroarch.cfg"

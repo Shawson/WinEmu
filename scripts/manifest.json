@@ -1,6 +1,7 @@
 {
 	"downloads": [
 	  {"file":"ePSXe205.zip", "url":"http://www.epsxe.com/files/ePSXe205.zip"},
+	  {"file":"Dolphin-x64.7z", "url":"https://dl.dolphin-emu.org/builds/dolphin-master-5.0-9963-x64.7zhttps://dl.dolphin-emu.org/builds/dolphin-master-5.0-9963-x64.7z"},
 	  {"file":"pcsx2-1.4.0-binaries.7z", "url":"https://pcsx2.net/download/releases/windows/send/40-windows/119-pcsx2-1-4-0-binaries.html"},
 	  {"file":"fs-uae_2.8.3_windows_x86.zip", "url":"https://fs-uae.net/stable/2.8.3/fs-uae_2.8.3_windows_x86.zip"},
 	  {"file":"RetroArch.7z", "url": "https://buildbot.libretro.com/stable/1.6.7/windows/x86_64/RetroArch.7z"},
@@ -28,7 +29,7 @@
 		{"file":"EmulationStation-Win32.zip", "repo":"jrassa/emulationstation"},
 		{"file":"scraper_windows_amd64.zip", "repo":"sselph/scraper"},
 		{"file":"ESGamePadDetect.7z", "repo":"Shawson/ESGamePadDetect"},
-		{"file":"recalbox-multi-v2.0.0.tar.xz", "repo":"recalbox/recalbox-themes"}
+		{"file":"recalbox-multi-v2.0.0.tar.xz", "repo":"recalbox/recalbox-themes"},
 		{"file":"bezel_project_web_installer_v1.3.exe", "repo":"thebezelproject/BezelProject-Windows"}
 	]
 }

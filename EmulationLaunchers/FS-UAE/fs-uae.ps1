@@ -324,7 +324,11 @@ function ProcessController {
 
     $controllerName = GetControllerName -deviceName $thisAttachedController.DeviceName -driverName $driverName -controllerIndex $thisAttachedController.ControllerIndex
     $thisControllerInputConfig.input | ForEach-Object { 
-        $Script:InputConfigString += " --$($controllerName)$(GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value)" 
+        $thisControlDef = GetMappedControl -type $_.type -name $_.name -id $_.id -value $_.value
+
+        if ($null -ne $thisControlDef) {
+            $Script:InputConfigString += " --$($controllerName)$($thisControlDef)" 
+        }
     }
 }
 # get controller setup

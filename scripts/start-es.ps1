@@ -20,7 +20,8 @@ Try {
 
     log("Launching ES with command: $process $processArgs")
 
-    Start-Process -filepath $process -ArgumentList $processArgs -Wait
+    #Start-Process -filepath $process -ArgumentList $processArgs -Wait
+    Start-Process -filepath $process -Wait
 
     stop-job -name "eswatcherjob"
     remove-job -name "eswatcherjob"
