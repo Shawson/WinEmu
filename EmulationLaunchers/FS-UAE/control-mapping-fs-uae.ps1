@@ -1,6 +1,6 @@
 function GetControllerName([string]$deviceName, [string]$driverName, [int]$controllerIndex)
 {
-    return "joystick_$($controllerIndex + 1)"
+    return "joystick_$($controllerIndex)"
 }
 
  function GetMappedControl([String]$type, [String]$name,[String]$id,[String]$value, [int]$controllerIndex)
@@ -8,8 +8,9 @@ function GetControllerName([string]$deviceName, [string]$driverName, [int]$contr
     switch ($type) 
     { 
         "button" { return GetButton -name $name -id $id -value $value -controllerIndex $controllerIndex } 
-        "axis" { return "" } #return GetAxis -name $name -id $id -value $value } 
+        "axis" { return $null } #return GetAxis -name $name -id $id -value $value } 
         "hat" { return GetHat -name $name -id $id -value $value } 
+        default { return $null }
     }
 }
 
@@ -23,6 +24,7 @@ function GetButton([String]$name, [String]$id, [String]$value, [int]$controllerI
         "b" { $mappedName = "action_joy_$($controllerIndex + 1)_2nd_button" }
         "a" { $mappedName = "action_joy_$($controllerIndex + 1)_3rd_button" }
         "hotkeyenable" { $mappedName = "action_menu" }
+        default { return $null }
     }
 
     return "_button_$($id)=$($mappedName)"
@@ -35,6 +37,7 @@ function GetHat([String]$name, [String]$id, [String]$value) {
         "up" { $mappedName = "action_joy_$($controllerIndex + 1)_up" } 
         "left" { $mappedName = "action_joy_$($controllerIndex + 1)_left" }
         "right" { $mappedName = "action_joy_$($controllerIndex + 1)_right" }
+        default { return $null }
     }
 
     switch($value) {
@@ -42,6 +45,7 @@ function GetHat([String]$name, [String]$id, [String]$value) {
         "2" { $hatValue = "right" }
         "4" { $hatValue = "down" }
         "8" { $hatValue = "left" }
+        default { return $null }
     }
 
     return "_hat_$($id)_$($hatValue)=$($mappedName)"
@@ -64,12 +68,14 @@ function GetAxis([String]$name, [String]$id, [String]$value) {
         "right" { $mappedName = "input_right_axis" } 
         "lefttrigger" { $mappedName = "input_l2_axis" } 
         "righttrigger" { $mappedName = "input_r2_axis" } 
+        default { return $null }
     }
 
     switch($value)
     {
         "+1" { $sign = "+" }
         "-1" { $sign = "-" }
+        default { return $null }
     }
 
     return "$($mappedName) = ""$($sign)$($id)"""
