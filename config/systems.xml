@@ -200,7 +200,7 @@
         </emulator>
     </system>
     <system name="ps2" displayName="Sony PlayStation 2">
-        <emulator name="pcsx2" displayName="pcsx2" path="Emulators\pcsx2\pcsx2.exe %ROM% --fullscreen --nogui %ROM%">
+        <emulator name="pcsx2" displayName="pcsx2" path="Emulators\pcsx2\pcsx2.exe %ROM% --fullscreen --nogui --portable">
             <extensionOverrides>
                 <extension>iso</extension>
                 <extension>img</extension>
