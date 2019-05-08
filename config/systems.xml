@@ -120,8 +120,8 @@
             </extensionOverrides>
         </emulator>
     </system>
-    <system name="mame" defaultEmulator="mame_libretro" displayName="MAME" esPlatform="arcade">
-        <emulator name="mame_libretro" displayName="Retroarch mame" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName mame_libretro.dll -romPath %ROM%">
+    <system name="mame2003" defaultEmulator="mame2003_libretro" displayName="MAME 2003" esPlatform="mame">
+        <emulator name="mame2003_libretro" displayName="Retroarch mame2003" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName mame2003_libretro.dll -romPath %ROM%">
             <extensionOverrides>
                 <extension>zip</extension>
             </extensionOverrides>
@@ -248,6 +248,13 @@
             </extensionOverrides>
         </emulator>
     </system>
+    <system name="wiiu" defaultEmulator="cemu" displayName="Nintendo Wii U">
+        <emulator name="cemu" displayName="CEMU" path=".\emulators\cemu_1.15.5\Cemu.exe %ROM%">
+            <extensionOverrides>
+                <extension>iso</extension>
+            </extensionOverrides>
+        </emulator>
+    </system>    
     <system name="zxspectrum" displayName="Sinclair ZX Spectrum">
         <emulator name="fuse_libretro" displayName="Retroarch Fuse" path=".\EmulationLaunchers\retroarch\retroarch.ps1 -coreName fuse_libretro.dll -romPath %ROM%">
             <extensionOverrides>

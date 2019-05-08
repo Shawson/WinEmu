@@ -79,6 +79,7 @@ $retroWinRoot = (Get-Item $scriptPath).Parent.FullName
     Catch {
         $ErrorMessage = $_.Exception.Message
         log ("Error running script : $ErrorMessage")
+        log ("$($_.Exception)")
         log ("Terminated abnormally")
     }
 #) | Tee-Object -FilePath "$scriptPath\..\last-run.log"
